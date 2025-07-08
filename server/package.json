@@ -1,0 +1,16 @@
+{
+	"name": "server",
+	"scripts": {
+		"dev": "ts-node-dev --respawn --transpile-only --clear ./src/server.ts",
+		"prod": "tsc && node dist/server.js"
+	},
+	"dependencies": {
+		"fastify": "^5.4.0",
+		"pino-pretty": "^13.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^24.0.10",
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^5.8.3"
+	}
+}

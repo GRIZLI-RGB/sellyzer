@@ -1,0 +1,16 @@
+{
+	"name": "sellyzer",
+	"private": true,
+	"workspaces": [
+		"client",
+		"server",
+		"blog"
+	],
+	"scripts": {
+		"dev": "concurrently \"pnpm --filter client dev\" \"pnpm --filter server dev\"",
+		"prod": "pnpm install --prod && pnpm --filter client prod && pnpm --filter server prod"
+	},
+	"devDependencies": {
+		"concurrently": "^9.2.0"
+	}
+}

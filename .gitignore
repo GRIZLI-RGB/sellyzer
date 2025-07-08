@@ -1,0 +1,86 @@
+# Node.js
+**/node_modules/
+**/package-lock.json
+**/yarn.lock
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# Logs
+**/*.log
+**/logs/
+**/log/
+
+# dotenv environment variables (любого уровня)
+**/.env*
+ 
+# OS-specific files
+**/.DS_Store
+**/Thumbs.db
+
+# Next.js build
+**/.next/
+**/.turbo/
+**/out/
+**/.vercel/
+
+# Build (например, от TypeScript или Babel)
+**/dist/
+**/build/
+**/.next
+
+# IDE configs
+**/.vscode/
+**/.idea/
+**/*.sw?
+
+# Test coverage
+**/coverage/
+
+# Temporary files
+**/*.swp
+**/*.swo
+**/*.tmp
+
+# MacOS metadata
+.DS_Store
+
+# Windows metadata
+Thumbs.db
+
+# Linux
+*~
+
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# JetBrains IDEs
+.idea/
+
+# VSCode
+.vscode/
+
+# Vim swap files
+*.swp
+*.swo
+
+# MacOS folder attributes
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Thumbs.db (Windows)
+Thumbs.db
+ehthumbs.db
+
+# Desktop.ini (Windows)
+Desktop.ini
+
+**/.cache/
+**/.nyc_output/
+**/coverage/
