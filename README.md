@@ -4,8 +4,8 @@ Sellyzer — AI-сервис для продавцов Wildberries и Ozon. Ге
 
 ## 🚀 Стек
 
--   **Frontend:** Next.js 15 (App Router), Tailwind, Jotai, tRPC, React Hook Form, TanStack Query
--   **Backend:** Fastify, PostgreSQL, Drizzle ORM, Zod, node-cron
+-   **Frontend:** Next.js 15 (App Router), Tailwind, Zustand, tRPC, React Hook Form
+-   **Backend:** Fastify, PostgreSQL, Drizzle ORM, Zod, PG-Boss
 -   **Интеграции:** OpenAI, ЮKassa, Robokassa, NowPayments
 -   **Блог:** Astro + Markdown
 -   **Документация:** Mintlify
