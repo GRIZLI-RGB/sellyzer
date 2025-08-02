@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Roboto_Mono } from "next/font/google";
 
-import "./globals.css";
+import Providers from "./components/providers";
+
+import "./styles/globals.css";
 
 export const metadata: Metadata = {
 	title: "Sellyzer",
 };
 
-const inter = Inter({
-	subsets: ["latin", "cyrillic"],
-	variable: "--font-inter",
-	display: "swap",
-});
+import { Inter } from "next/font/google";
 
-const robotoMono = Roboto_Mono({
-	subsets: ["latin", "cyrillic"],
-	variable: "--font-robotoMono",
+const inter = Inter({
+	subsets: ["latin"],
 	display: "swap",
+	variable: "--font-inter",
 });
 
 export default function RootLayout({
@@ -27,9 +24,9 @@ export default function RootLayout({
 	return (
 		<html lang="ru">
 			<body
-				className={`${inter.variable} ${robotoMono.variable} antialiased`}
+				className={`antialiased ${inter.className}`}
 			>
-				{children}
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);
