@@ -1,7 +1,11 @@
 import Fastify, { FastifyInstance } from "fastify";
+import * as dotenv from "dotenv";
 import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import helmet from "@fastify/helmet";
+import cookie from "@fastify/cookie";
+
+dotenv.config();
 
 const fastify: FastifyInstance = Fastify({
 	bodyLimit: 1024 * 1024 * 5,
@@ -36,6 +40,12 @@ const startBackend = async () => {
 	await fastify.register(helmet, {
 		contentSecurityPolicy: process.env.MODE === "production",
 	});
+
+	await fastify.register(cookie, {
+		secret: process.env.COOKIE_SECRET,
+	});
+
+	await fastify.register(import("./plugins/oauth.plugin"));
 
 	await fastify.register(import("./routes"), { prefix: "/api" });
 
