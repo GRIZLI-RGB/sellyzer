@@ -2,7 +2,7 @@ import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
 	id: serial().primaryKey(),
-	email: varchar({ length: 256 }).unique().notNull(),
+	email: varchar({ length: 256 }).unique(),
 	name: varchar({ length: 128 }),
 	avatarUrl: text(),
 	authProvider: varchar({ length: 32 })

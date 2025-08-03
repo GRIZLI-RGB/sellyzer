@@ -40,16 +40,18 @@ export default function AuthPage() {
 		container?.appendChild(script);
 
 		window.onTelegramAuth = (user) => {
-			// fetch("/api/auth/telegram", {
-			// 	method: "POST",
-			// 	headers: { "Content-Type": "application/json" },
-			// 	body: JSON.stringify(user),
-			// })
-			// 	.then((res) => res.json())
-			// 	.then((data) => {
-			// 		localStorage.setItem("token", data.token);
-			// 		window.location.href = "/dashboard";
-			// 	});
+			fetch(
+				`${
+					process.env.NODE_ENV === "development"
+						? "http://localhost:8000"
+						: "https://sellyzer.ru"
+				}/api/auth/telegram`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(user),
+				}
+			).then(() => (window.location.href = "/dashboard"));
 		};
 	}, []);
 
