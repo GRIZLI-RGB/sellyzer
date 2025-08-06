@@ -11,6 +11,16 @@
 		"prod": "pnpm install --prod && pnpm --filter client prod && pnpm --filter server prod"
 	},
 	"devDependencies": {
-		"concurrently": "^9.2.0"
+		"@types/node": "^24.2.0",
+		"concurrently": "^9.2.0",
+		"drizzle-orm": "^0.44.4",
+		"fastify": "^5.4.0"
+	},
+	"dependencies": {
+		"@trpc/client": "11.4.3",
+		"@trpc/next": "11.4.3",
+		"@trpc/react-query": "11.4.3",
+		"@trpc/server": "11.4.3",
+		"zod": "^4.0.14"
 	}
 }

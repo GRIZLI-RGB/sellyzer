@@ -1,11 +1,15 @@
 import Fastify, { FastifyInstance } from "fastify";
-import * as dotenv from "dotenv";
 import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import helmet from "@fastify/helmet";
 import cookie from "@fastify/cookie";
+import {
+	fastifyTRPCPlugin,
+	FastifyTRPCPluginOptions,
+} from "@trpc/server/adapters/fastify";
 
-dotenv.config();
+import { appRouter, type AppRouter } from "./utils/trpc/router";
+import { createContext } from "./utils/trpc/context";
 
 const fastify: FastifyInstance = Fastify({
 	bodyLimit: 1024 * 1024 * 5,
@@ -46,6 +50,14 @@ const startBackend = async () => {
 	});
 
 	await fastify.register(import("./plugins/oauth.plugin"));
+
+	await fastify.register(fastifyTRPCPlugin, {
+		prefix: "/api/trpc",
+		trpcOptions: {
+			router: appRouter,
+			createContext,
+		} satisfies FastifyTRPCPluginOptions<AppRouter>["trpcOptions"],
+	});
 
 	await fastify.register(import("./routes"), { prefix: "/api" });
 

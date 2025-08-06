@@ -8,13 +8,21 @@
   },
   "dependencies": {
     "@heroui/react": "^2.8.1",
+    "@tanstack/react-query": "^5.84.1",
+    "@trpc/client": "^11.4.4",
+    "@trpc/react-query": "^11.4.3",
+    "@trpc/server": "^11.4.4",
+    "@trpc/tanstack-react-query": "^11.4.4",
+    "client-only": "^0.0.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.9",
     "lucide-react": "^0.526.0",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
