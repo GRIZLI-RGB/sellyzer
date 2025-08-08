@@ -3,8 +3,22 @@
 @source './../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 
-*,
-*::after,
-*::before {
-	transition: all 0.2s;
+html,
+body {
+	height: 100vh;
+	min-height: 100%;
+}
+
+button {
+	cursor: pointer;
+}
+
+.transition-base {
+	transition: background-color 0.2s ease, border-color 0.2s ease,
+		color 0.2s ease, fill 0.2s ease, stroke 0.2s ease, opacity 0.2s ease,
+		box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.disable-transitions * {
+	transition: none !important;
 }
