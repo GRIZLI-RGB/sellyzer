@@ -1,22 +1,17 @@
 "use client";
 
 import { useEffect, useState, useRef, useMemo } from "react";
-import {
-	LayoutGrid,
-	Table as TableIcon,
-	Search,
-	Plus,
-	Star,
-} from "lucide-react";
+import { LayoutGrid, Table as TableIcon, Plus, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { FiArrowUpRight, FiArrowDownRight } from "react-icons/fi";
 
-import { ThemeToggle } from "@/app/components/features/theme-toggle";
 import { useDebounce } from "@/app/hooks/useDebounce";
 import Modal from "@/app/components/shared/modal";
 import { Tooltip } from "@heroui/react";
+import TopPanel from "@/app/components/shared/top-panel";
+import Button from "@/app/components/shared/button";
 
 const isUrl = (s?: string) => {
 	if (!s) return false;
@@ -421,75 +416,48 @@ export default function ProductsPage() {
 	return (
 		<div className="space-y-4">
 			{/* Верхняя панель */}
-			<div className="flex flex-col md:flex-row justify-between gap-2 md:items-center">
-				<h1 className="text-2xl font-semibold">
-					Товары{" "}
-					<span className="text-sm text-gray-500 dark:text-gray-400">
-						({filteredProducts.length})
-					</span>
-				</h1>
-
-				<div className="flex gap-2 items-center">
-					{/* Поиск */}
-					<div className="relative">
-						<Search
-							className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
-							size={18}
-						/>
-						<input
-							type="text"
-							placeholder="Поиск..."
-							className="pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-neutral-700 
-						   bg-white dark:bg-neutral-800 text-sm w-full md:w-64
-						   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-						   transition-base"
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-						/>
-					</div>
-
-					{/* Переключатель вида */}
-					<div className="flex border border-gray-200 dark:border-neutral-700 rounded-lg p-0.5">
-						<button
-							onClick={() => setView("table")}
-							className={clsx(
-								"p-1.5 rounded-md transition-base",
-								view === "table"
-									? "bg-black text-white dark:bg-white dark:text-black"
-									: "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
-							)}
-							aria-label="Таблица"
-						>
-							<TableIcon size={18} />
-						</button>
-						<button
-							onClick={() => setView("cards")}
-							className={clsx(
-								"p-1.5 rounded-md transition-base",
-								view === "cards"
-									? "bg-black text-white dark:bg-white dark:text-black"
-									: "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
-							)}
-							aria-label="Карточки"
-						>
-							<LayoutGrid size={18} />
-						</button>
-					</div>
-
-					{/* Добавить товар */}
+			<TopPanel
+				title="Товары"
+				numberElements={filteredProducts.length}
+				searchQuery={searchQuery}
+				setSearchQuery={setSearchQuery}
+			>
+				{/* Переключатель вида */}
+				<div className="flex border border-gray-200 dark:border-neutral-700 rounded-lg p-0.5">
 					<button
-						onClick={() => setIsModalOpen(true)}
-						className="flex items-center gap-1.5 px-3 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 
-			   text-white text-sm font-medium
-					    transition-base"
+						onClick={() => setView("table")}
+						className={clsx(
+							"p-1.5 rounded-md transition-base",
+							view === "table"
+								? "bg-black text-white dark:bg-white dark:text-black"
+								: "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
+						)}
+						aria-label="Таблица"
 					>
-						<Plus size={16} />
-						<span>Добавить товар</span>
+						<TableIcon size={18} />
 					</button>
-
-					<ThemeToggle />
+					<button
+						onClick={() => setView("cards")}
+						className={clsx(
+							"p-1.5 rounded-md transition-base",
+							view === "cards"
+								? "bg-black text-white dark:bg-white dark:text-black"
+								: "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
+						)}
+						aria-label="Карточки"
+					>
+						<LayoutGrid size={18} />
+					</button>
 				</div>
-			</div>
+
+				{/* Добавить товар */}
+				<Button
+					variant="accent"
+					icon={<Plus size={16} />}
+					text="Добавить товар"
+					onClick={() => setIsModalOpen(true)}
+				/>
+			</TopPanel>
 
 			{/* Контент */}
 			{filteredProducts.length === 0 ? (
