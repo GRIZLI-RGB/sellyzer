@@ -60,7 +60,7 @@ const TRIGGERS = [
 	},
 ];
 
-export default function AlertsPage() {
+export default function DashboardAlertsPage() {
 	const [triggers, setTriggers] = useState(TRIGGERS);
 	const [connected, setConnected] = useState(false);
 

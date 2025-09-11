@@ -360,7 +360,7 @@ const PlatformBadge = ({
 	);
 };
 
-export default function ProductsPage() {
+export default function DashboardProductsPage() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const debouncedQuery = useDebounce(searchQuery);
 	const [view, setView] = useState<"table" | "cards">("table");
