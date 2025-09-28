@@ -438,3 +438,293 @@
 // 		</div>
 // 	);
 // }
+
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Check, Zap, Gift } from "lucide-react";
+
+// Типы для платежных систем
+type PaymentMethod = "yookassa" | "robokassa" | "nowpayments";
+
+// Интерфейс для опций пополнения
+interface TopUpOption {
+  months: number;
+  amount: number;
+  discount: number;
+  perMonth: number;
+  popular?: boolean;
+}
+
+export default function CheckoutPage() {
+  const router = useRouter();
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>("yookassa");
+  const [customAmount, setCustomAmount] = useState<number>(990);
+  const [selectedOption, setSelectedOption] = useState<number>(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Опции пополнения с учетом скидок
+  const topUpOptions: TopUpOption[] = [
+    { months: 1, amount: 990, discount: 0, perMonth: 990 },
+    { months: 3, amount: 2673, discount: 10, perMonth: 891, popular: true },
+    { months: 6, amount: 5346, discount: 10, perMonth: 891 },
+    { months: 12, amount: 10692, discount: 10, perMonth: 891 },
+  ];
+
+  // Рассчитать скидку для кастомной суммы
+  const calculateDiscount = (amount: number): number => {
+    const months = Math.floor(amount / 990);
+    if (months >= 12) return 10;
+    if (months >= 6) return 10;
+    if (months >= 3) return 10;
+    return 0;
+  };
+
+  const discount = calculateDiscount(customAmount);
+  const finalAmount = customAmount - (customAmount * discount) / 100;
+
+  // Обработка оплаты
+  const handlePayment = async () => {
+    setIsProcessing(true);
+    // Здесь будет логика перенаправления на выбранную платежную систему
+    // В реальном приложении здесь будет запрос к API для создания платежа
+    
+    // Имитация процесса оплаты
+    setTimeout(() => {
+      setIsProcessing(false);
+      alert("Перенаправление на страницу оплаты...");
+      // В реальном приложении здесь будет redirect на страницу платежной системы
+    }, 1500);
+  };
+
+  // Проверка, что сумма кратна 990
+  const isAmountValid = customAmount % 990 === 0 && customAmount >= 990;
+
+  return (
+    <>
+      {/* Заголовок и навигация */}
+      <div className="flex items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Пополнение баланса</h1>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Основной контент */}
+        <div className="lg:col-span-2">
+          {/* Выбор суммы */}
+          <div className="bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700 p-6 mb-6">
+            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Выберите сумму пополнения</h2>
+            
+            {/* Готовые опции */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              {topUpOptions.map((option, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setSelectedOption(index);
+                    setCustomAmount(option.amount);
+                  }}
+                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                    selectedOption === index
+                      ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20"
+                      : "border-gray-200 dark:border-neutral-700 hover:border-yellow-300 dark:hover:border-yellow-600"
+                  } ${option.popular ? "ring-1 ring-yellow-400 dark:ring-yellow-500" : ""}`}
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      {option.months} мес
+                    </span>
+                    {option.popular && (
+                      <span className="text-xs bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-full">
+                        Выгодно
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {option.amount.toLocaleString("ru-RU")} ₽
+                  </div>
+                  {option.discount > 0 && (
+                    <div className="text-sm text-green-600 dark:text-green-400 mt-1">
+                      Экономия {option.discount}%
+                    </div>
+                  )}
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {option.perMonth} ₽/мес
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Кастомная сумма */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                Или укажите свою сумму (кратную 990 ₽)
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={customAmount}
+                  onChange={(e) => setCustomAmount(Number(e.target.value))}
+                  step="990"
+                  min="990"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                />
+                <span className="absolute right-3 top-3 text-gray-500 dark:text-gray-400">₽</span>
+              </div>
+              {!isAmountValid && customAmount > 0 && (
+                <p className="text-red-500 text-sm mt-2">
+                  Сумма должна быть кратна 990 ₽
+                </p>
+              )}
+            </div>
+            
+            {/* Информация о скидке */}
+            {discount > 0 && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-4">
+                <div className="flex items-center">
+                  <Gift size={16} className="text-green-600 dark:text-green-400 mr-2" />
+                  <span className="text-green-700 dark:text-green-300 font-medium">
+                    Ваша скидка: {discount}% ({((customAmount * discount) / 100).toLocaleString("ru-RU")} ₽)
+                  </span>
+                </div>
+              </div>
+            )}
+            
+            {/* Итоговая сумма */}
+            <div className="flex justify-between items-center py-3 border-t border-gray-200 dark:border-neutral-700">
+              <span className="text-gray-700 dark:text-gray-300">К оплате:</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                {finalAmount.toLocaleString("ru-RU")} ₽
+              </span>
+            </div>
+          </div>
+          
+          {/* Выбор способа оплаты */}
+          <div className="bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700 p-6 mb-6">
+            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Способ оплаты</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div
+                onClick={() => setSelectedMethod("yookassa")}
+                className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                  selectedMethod === "yookassa"
+                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                    : "border-gray-200 dark:border-neutral-700 hover:border-gray-300 dark:hover:border-neutral-600"
+                }`}
+              >
+                <div className="flex items-center">
+                  <div className="w-10 h-10 relative mr-3 bg-white rounded p-1">
+                    <Image 
+                      src="/images/payment-systems/yookassa.png" 
+                      alt="ЮKassa" 
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <span className="font-medium text-gray-900 dark:text-white">ЮKassa</span>
+                </div>
+              </div>
+              
+              <div
+                onClick={() => setSelectedMethod("robokassa")}
+                className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                  selectedMethod === "robokassa"
+                    ? "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+                    : "border-gray-200 dark:border-neutral-700 hover:border-gray-300 dark:hover:border-neutral-600"
+                }`}
+              >
+                <div className="flex items-center">
+                  <div className="w-10 h-10 relative mr-3 bg-white rounded p-1">
+                    <Image 
+                      src="/images/payment-systems/robokassa.png" 
+                      alt="Robokassa" 
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <span className="font-medium text-gray-900 dark:text-white">Robokassa</span>
+                </div>
+              </div>
+              
+              <div
+                onClick={() => setSelectedMethod("nowpayments")}
+                className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                  selectedMethod === "nowpayments"
+                    ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                    : "border-gray-200 dark:border-neutral-700 hover:border-gray-300 dark:hover:border-neutral-600"
+                }`}
+              >
+                <div className="flex items-center">
+                  <div className="w-10 h-10 relative mr-3 bg-white rounded p-1">
+                    <Image 
+                      src="/images/payment-systems/nowpayments.png" 
+                      alt="NowPayments" 
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <span className="font-medium text-gray-900 dark:text-white">NowPayments</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Кнопка оплаты */}
+          <button
+            onClick={handlePayment}
+            disabled={!isAmountValid || isProcessing}
+            className="w-full py-3 px-4 bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-semibold rounded-lg transition-colors flex items-center justify-center"
+          >
+            {isProcessing ? (
+              <>Обработка...</>
+            ) : (
+              <>
+                <Zap size={18} className="mr-2" />
+                Перейти к оплате {finalAmount.toLocaleString("ru-RU")} ₽
+              </>
+            )}
+          </button>
+        </div>
+        
+        {/* Боковая панель с информацией */}
+        <div className="lg:col-span-1">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700 p-6 sticky top-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Что вы получаете</h3>
+            
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <Check size={18} className="text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">Безлимитное добавление товаров</span>
+              </li>
+              <li className="flex items-start">
+                <Check size={18} className="text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">Расширенная аналитика и отчеты</span>
+              </li>
+              <li className="flex items-start">
+                <Check size={18} className="text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">Рекламные инструменты</span>
+              </li>
+              <li className="flex items-start">
+                <Check size={18} className="text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">Анализ конкурентов</span>
+              </li>
+              <li className="flex items-start">
+                <Check size={18} className="text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">Расширенные уведомления в Telegram</span>
+              </li>
+            </ul>
+            
+            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-neutral-700">
+              <h4 className="font-medium mb-2 text-gray-900 dark:text-white">Как это работает</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                После оплаты ваш аккаунт будет автоматически обновлен до PRO-статуса. 
+                Средства зачисляются на баланс и списываются помесячно.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

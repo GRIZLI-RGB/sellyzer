@@ -208,7 +208,7 @@ export default function DashboardLayout({
 
 					<div className="flex flex-col">
 						<a
-							href="/dashboard/pro/checkout"
+							href="/dashboard/billing"
 							className="w-full text-center py-2 px-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-md transition-base"
 						>
 							Оформить PRO — 990₽/мес

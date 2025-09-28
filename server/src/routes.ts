@@ -7,7 +7,7 @@ import { db } from "./plugins/database.plugin";
 import { users } from "./schema/users";
 
 interface TelegramAuthPayload {
-	id: number;
+  id: number;
 	first_name: string;
 	last_name?: string;
 	username?: string;
