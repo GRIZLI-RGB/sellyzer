@@ -175,7 +175,7 @@ export default function DashboardLayout({
 					</div>
 				</aside>
 
-				<main className="flex-1 min-h-screen p-4 overflow-auto">
+				<main className="flex-1 min-h-screen px-5 py-4 overflow-auto">
 					{children}
 				</main>
 			</div>
