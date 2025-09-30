@@ -4,23 +4,22 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import {
-	Star,
 	TrendingUp,
 	CheckCircle,
-	Download,
 	BarChart3,
 	Eye,
 	Zap,
 	ChevronDown,
 	ChevronUp,
-	HelpCircle,
 	Target,
+	Star,
+	ThumbsUp,
 } from "lucide-react";
-import { Tooltip } from "@heroui/react";
+import { RefreshCw, Trash2 } from "lucide-react";
+
 import TopPanel from "@/app/components/shared/top-panel";
 import Button from "@/app/components/shared/button";
 
-// Типы данных
 interface Product {
 	id: number;
 	name: string;
@@ -64,7 +63,6 @@ interface Recommendation {
 	completed: boolean;
 }
 
-// Моковые данные
 const mockProduct: Product = {
 	id: 1,
 	name: "Умная колонка Яндекс Станция Мини 2 с Алисой, черный",
@@ -151,21 +149,117 @@ const mockRecommendations: Recommendation[] = [
 	},
 ];
 
+const tabs = [
+	{ id: "analytics", label: "Аналитика" },
+	{ id: "prices", label: "История цен" },
+	{ id: "recommendations", label: "Рекомендации" },
+	{ id: "competitors", label: "Конкуренты" },
+];
+
+const changes = [
+	{
+		color: "bg-blue-500",
+		text: "Цена уменьшена на 100₽",
+		time: "Сегодня в 14:30",
+	},
+	{
+		color: "bg-green-500",
+		text: "Добавлено 3 новых отзыва",
+		time: "Вчера в 09:15",
+	},
+	{
+		color: "bg-yellow-500",
+		text: "Рейтинг изменился с 4.6 до 4.7",
+		time: "20 ноября",
+	},
+];
+
+function MetricCard({
+	value,
+	label,
+	trend,
+}: {
+	value: string | number;
+	label: string;
+	trend?: "up" | "down" | "neutral";
+}) {
+	const colors = {
+		up: "text-green-500",
+		down: "text-red-500",
+		neutral: "text-gray-400",
+	};
+
+	const icons = {
+		up: "▲",
+		down: "▼",
+		neutral: "•",
+	};
+
+	return (
+		<div className="bg-gray-50 dark:bg-neutral-700/30 p-4 rounded-lg">
+			<div className="flex items-baseline gap-2">
+				<div className="text-2xl font-bold text-gray-900 dark:text-white">
+					{value}
+				</div>
+				{trend && (
+					<span className={`text-sm ${colors[trend]}`}>
+						{icons[trend]}
+					</span>
+				)}
+			</div>
+			<div className="text-sm text-gray-500 dark:text-gray-400">
+				{label}
+			</div>
+		</div>
+	);
+}
+
+function OnlyForPro({
+	text,
+	icon: Icon,
+}: {
+	text: string;
+	icon: React.ComponentType<{ size?: number }>;
+}) {
+	return (
+		<div className="bg-gray-50 dark:bg-neutral-700 p-6 rounded-lg text-center border border-dashed border-gray-300 dark:border-neutral-600">
+			<div className="relative flex items-center justify-center h-32 mb-4">
+				<div className="w-full h-full bg-gray-200 dark:bg-neutral-600 rounded-md flex items-center justify-center text-gray-400">
+					<svg
+						className="w-16 h-10 opacity-30"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							d="M3 17l6-6 4 4 8-8"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+					</svg>
+				</div>
+			</div>
+			<div className="flex items-center justify-center text-gray-500 dark:text-gray-400 gap-2">
+				<Icon size={18} />
+				<span>{text}</span>
+			</div>
+		</div>
+	);
+}
+
 export default function ProductDetailPage() {
 	const params = useParams();
-	const [product, setProduct] = useState<Product>(mockProduct);
-	const [priceHistory, setPriceHistory] =
-		useState<PriceHistory[]>(mockPriceHistory);
-	const [analytics, setAnalytics] = useState<Analytics>(mockAnalytics);
+	const [product] = useState<Product>(mockProduct);
+	const [priceHistory] = useState<PriceHistory[]>(mockPriceHistory);
+	const [analytics] = useState<Analytics>(mockAnalytics);
 	const [recommendations, setRecommendations] =
 		useState<Recommendation[]>(mockRecommendations);
 	const [activeTab, setActiveTab] = useState<string>("analytics");
 	const [expandedRecommendations, setExpandedRecommendations] =
 		useState<boolean>(true);
 
-	// Загрузка данных товара (в реальном приложении - API запрос)
 	useEffect(() => {
-		// Здесь будет запрос к API для получения данных товара по ID
 		console.log("Loading product with ID:", params.id);
 	}, [params.id]);
 
@@ -224,196 +318,191 @@ export default function ProductDetailPage() {
 		);
 	};
 
+	const [expandedIds, setExpandedIds] = useState<number[]>([]);
+
+	function toggleExpand(id: number) {
+		setExpandedIds((prev) =>
+			prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+		);
+	}
+
 	return (
 		<div className="space-y-6">
-			<TopPanel title="Товар">
-        <Button
-					variant="accent"
-					icon={<RefreshCw size={16} className="min-w-4" />}
-					text="Обновить"
-				/>
+			<TopPanel title={`Товар «${product.name}»`}>
 				<Button
-					variant="accent"
+					variant="danger"
 					icon={<Trash2 size={16} className="min-w-4" />}
-					text="Удалить"
+					text="Удалить товар"
 				/>
 			</TopPanel>
 
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_280px] gap-6">
 				{/* Основная информация о товаре */}
 				<div className="lg:col-span-2">
+					{/* Основная карточка */}
 					<div className="bg-white dark:bg-neutral-800 rounded-lg border border-gray-200 dark:border-neutral-700 p-6 mb-6">
-						<div className="flex flex-col md:flex-row gap-6">
-							{/* Изображение товара */}
-							<div className="flex-shrink-0">
-								<div className="relative w-full md:w-64 h-64 rounded-lg overflow-hidden border border-gray-200 dark:border-neutral-700">
+						<div className="md:grid md:grid-cols-[260px_1fr] gap-6">
+							<div className="relative">
+								<div className="w-full h-64 overflow-hidden border border-gray-200 dark:border-neutral-700">
 									<Image
 										src={product.image}
 										alt={product.name}
 										fill
-										className="object-cover"
+										className="object-cover rounded-lg"
+										priority
 									/>
 								</div>
-								<div className="flex items-center justify-center mt-4 gap-2">
-									<span
-										className={`text-sm font-medium ${
-											product.inStock
-												? "text-green-600"
-												: "text-red-600"
-										}`}
-									>
-										{product.inStock
-											? "В наличии"
-											: "Нет в наличии"}
-									</span>
-									<span className="text-sm text-gray-500 dark:text-gray-400">
-										•
-									</span>
-									<span className="text-sm text-gray-500 dark:text-gray-400">
-										{product.salesPerDay} продаж/день
+
+								{/* платформенный бейдж (в левом верхнем углу) */}
+								<div className="absolute top-3 left-3">
+									<span className="inline-flex items-center gap-1 px-1.5 py-1 rounded-md bg-white/90 dark:bg-neutral-900/80 text-xs font-medium shadow-sm">
+										<img
+											src={`/images/platforms/${product.platform}.png`}
+											alt={product.platform}
+											className="h-4"
+										/>
+										<span className="text-slate-700 dark:text-slate-200 text-xs">
+											{product.platform === "ozon"
+												? "Ozon"
+												: product.platform ===
+												  "wildberries"
+												? "Wildberries"
+												: product.platform === "avito"
+												? "Avito"
+												: "Yandex Market"}
+										</span>
 									</span>
 								</div>
 							</div>
 
-							{/* Информация о товаре */}
-							<div className="flex-grow">
-								<div className="flex items-start justify-between mb-2">
-									<h1 className="text-2xl font-bold text-gray-900 dark:text-white pr-4">
-										{product.name}
-									</h1>
-									<div className="whitespace-nowrap flex block items-center text-blue-600 dark:text-blue-400 text-sm">
-										<Eye size={16} className="mr-1" /> На
-										маркетплейсе
+							<div className="flex flex-col justify-between">
+								<header className="flex items-start justify-between gap-4">
+									<div className="min-w-0">
+										<h1
+											id={`product-${product.id}-title`}
+											className="text-lg md:text-2xl font-semibold text-gray-900 dark:text-white leading-snug"
+										>
+											{product.name}
+										</h1>
+										<div className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+											<span>
+												Артикул:{" "}
+												<span className="font-medium text-gray-700 dark:text-gray-200">
+													{product.sku}
+												</span>
+											</span>
+										</div>
 									</div>
-								</div>
 
-								<div className="flex items-center gap-2 mb-4">
-									<span className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs font-medium px-2 py-1 rounded-full">
-										{product.platform === "ozon"
-											? "Ozon"
-											: product.platform === "wildberries"
-											? "Wildberries"
-											: product.platform === "avito"
-											? "Avito"
-											: "Yandex Market"}
-									</span>
-									<span className="text-sm text-gray-500 dark:text-gray-400">
-										Артикул: {product.sku}
-									</span>
-								</div>
-
-								<div className="flex items-center gap-4 mb-4">
-									<div className="flex items-baseline gap-2">
-										<span className="text-3xl font-bold text-gray-900 dark:text-white">
+									<div className="text-right">
+										<div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
 											{product.price.toLocaleString(
 												"ru-RU"
 											)}{" "}
 											₽
-										</span>
-										{product.price < product.basePrice && (
-											<span className="text-lg text-gray-500 dark:text-gray-400 line-through">
-												{product.basePrice.toLocaleString(
-													"ru-RU"
-												)}{" "}
-												₽
-											</span>
+										</div>
+
+										{product.price < product.basePrice ? (
+											<div className="mt-1 flex items-center justify-end gap-2">
+												<span className="text-sm text-gray-500 dark:text-gray-400 line-through">
+													{product.basePrice.toLocaleString(
+														"ru-RU"
+													)}{" "}
+													₽
+												</span>
+												<span className="text-sm font-medium text-green-600 dark:text-green-400">
+													-
+													{Math.round(
+														(1 -
+															product.price /
+																product.basePrice) *
+															100
+													)}
+													%
+												</span>
+											</div>
+										) : (
+											<div className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+												Цена конкурентоспособна
+											</div>
 										)}
 									</div>
-									{product.price < product.basePrice && (
-										<span className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-sm font-medium px-2 py-1 rounded">
-											-
-											{Math.round(
-												(1 -
-													product.price /
-														product.basePrice) *
-													100
-											)}
-											%
-										</span>
-									)}
-								</div>
+								</header>
 
-								{/* Рейтинг и отзывы */}
-								<div className="flex items-center gap-4 mb-6">
-									<div className="flex items-center gap-1">
-										<div className="flex items-center bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-md">
+								<div className="grid grid-cols-3 gap-3 mb-4 text-center">
+									{/* Рейтинг отзывов */}
+									<div className="flex flex-col items-center justify-center p-3 bg-orange-50 dark:bg-orange-900/10 rounded-lg border border-orange-200 dark:border-orange-800">
+										<div className="flex items-center gap-1 mb-1">
 											<Star
 												size={16}
-												className="fill-yellow-400 text-yellow-400 mr-1"
+												className="text-orange-500 fill-orange-500"
 											/>
-											<span className="font-semibold">
+											<span className="font-bold text-gray-900 dark:text-white">
 												{product.reviewsRating}
 											</span>
 										</div>
-										<span className="text-sm text-gray-600 dark:text-gray-400">
+										<div className="text-xs text-gray-600 dark:text-gray-400">
 											{product.reviewsCount} отзывов
-										</span>
+										</div>
 									</div>
 
-									<div className="flex items-center">
-										<span className="text-sm text-gray-600 dark:text-gray-400">
-											Положительных:{" "}
-											<span className="font-medium text-green-600 dark:text-green-400">
+									{/* Системный рейтинг */}
+									<div className="relative flex flex-col items-center justify-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-400 dark:border-blue-600 shadow-md">
+										<div className="absolute -top-2">
+											<span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-semibold shadow">
+												СИСТЕМА
+											</span>
+										</div>
+										<div className="flex items-baseline justify-center gap-1 mt-2 mb-1">
+											<span className="text-2xl font-bold text-gray-900 dark:text-white">
+												{product.cardScore.toFixed(1)}
+											</span>
+											<span className="text-sm text-gray-500 dark:text-gray-400">
+												/5
+											</span>
+										</div>
+										<div className="text-xs text-gray-600 dark:text-gray-400">
+											Качество карточки
+										</div>
+									</div>
+
+									{/* Положительные отзывы */}
+									<div className="flex flex-col items-center justify-center p-3 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-200 dark:border-green-800">
+										<div className="flex items-center gap-1 mb-1">
+											<ThumbsUp
+												size={16}
+												className="text-green-600 dark:text-green-400"
+											/>
+											<span className="text-lg font-bold text-green-600 dark:text-green-400">
 												{product.positiveReviews}%
 											</span>
-										</span>
+										</div>
+										<div className="text-xs text-gray-600 dark:text-gray-400">
+											Довольных покупателей
+										</div>
 									</div>
 								</div>
 
-								{/* Оценка карточки */}
-								<div className="mb-6">
-									<div className="flex items-center justify-between mb-2">
-										<h3 className="font-medium text-gray-900 dark:text-white">
-											Оценка карточки товара
-										</h3>
-										<Tooltip
-											content="Рассчитывается на основе анализа заполненности, SEO-оптимизации и конверсии"
-											placement="top"
-										>
-											<HelpCircle
-												size={16}
-												className="text-gray-400 cursor-help"
-											/>
-										</Tooltip>
-									</div>
-									<div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-2.5">
-										<div
-											className="h-2.5 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
-											style={{
-												width: `${
-													product.cardScore * 20
-												}%`,
-											}}
-										></div>
-									</div>
-									<div className="flex justify-between items-center mt-1">
-										<span className="text-xs text-gray-500 dark:text-gray-400">
-											Низкая
-										</span>
-										<span className="text-xs font-medium text-gray-900 dark:text-white">
-											{product.cardScore.toFixed(1)} из
-											5.0
-										</span>
-										<span className="text-xs text-gray-500 dark:text-gray-400">
-											Высокая
-										</span>
-									</div>
-								</div>
-
-								{/* Действия с товаром */}
-								<div className="flex flex-wrap gap-2">
-									<button className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-										<BarChart3 size={16} className="mr-2" />{" "}
-										Полная аналитика
-									</button>
-									<button className="flex items-center px-4 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700 rounded-lg text-sm font-medium transition-colors">
-										<Download size={16} className="mr-2" />{" "}
-										CSV отчет
-									</button>
-									<button className="flex items-center px-4 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700 rounded-lg text-sm font-medium transition-colors">
-										<Zap size={16} className="mr-2" />{" "}
-										Улучшить карточку
-									</button>
+								<div className="flex flex-wrap gap-3">
+									<Button
+										text="Улучшить карточку"
+										icon={<Zap size={16} />}
+										variant="premium"
+									/>
+									<Button
+										text="Полная аналитика"
+										icon={<BarChart3 size={16} />}
+										variant="premium"
+									/>
+									<a
+										href={product.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="ml-auto text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+										aria-label="Открыть товар на маркетплейсе"
+									>
+										<Eye size={14} /> На маркетплейсе
+									</a>
 								</div>
 							</div>
 						</div>
@@ -422,46 +511,19 @@ export default function ProductDetailPage() {
 					{/* Навигация по разделам */}
 					<div className="border-b border-gray-200 dark:border-neutral-700 mb-6">
 						<nav className="flex flex-wrap -mb-px">
-							<button
-								onClick={() => setActiveTab("analytics")}
-								className={`py-3 px-4 font-medium text-sm border-b-2 ${
-									activeTab === "analytics"
-										? "border-blue-500 text-blue-600 dark:text-blue-400"
-										: "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-								}`}
-							>
-								Аналитика
-							</button>
-							<button
-								onClick={() => setActiveTab("prices")}
-								className={`py-3 px-4 font-medium text-sm border-b-2 ${
-									activeTab === "prices"
-										? "border-blue-500 text-blue-600 dark:text-blue-400"
-										: "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-								}`}
-							>
-								История цен
-							</button>
-							<button
-								onClick={() => setActiveTab("recommendations")}
-								className={`py-3 px-4 font-medium text-sm border-b-2 ${
-									activeTab === "recommendations"
-										? "border-blue-500 text-blue-600 dark:text-blue-400"
-										: "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-								}`}
-							>
-								Рекомендации
-							</button>
-							<button
-								onClick={() => setActiveTab("competitors")}
-								className={`py-3 px-4 font-medium text-sm border-b-2 ${
-									activeTab === "competitors"
-										? "border-blue-500 text-blue-600 dark:text-blue-400"
-										: "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-								}`}
-							>
-								Конкуренты
-							</button>
+							{tabs.map((tab) => (
+								<button
+									key={tab.id}
+									onClick={() => setActiveTab(tab.id)}
+									className={`py-3 px-4 font-medium text-sm border-b-2 ${
+										activeTab === tab.id
+											? "border-blue-500 text-blue-600 dark:text-blue-400"
+											: "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+									}`}
+								>
+									{tab.label}
+								</button>
+							))}
 						</nav>
 					</div>
 
@@ -473,52 +535,32 @@ export default function ProductDetailPage() {
 							</h2>
 
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-								<div className="bg-gray-50 dark:bg-neutral-700/30 p-4 rounded-lg">
-									<div className="text-2xl font-bold text-gray-900 dark:text-white">
-										{analytics.views}
-									</div>
-									<div className="text-sm text-gray-500 dark:text-gray-400">
-										Просмотры
-									</div>
-								</div>
-								<div className="bg-gray-50 dark:bg-neutral-700/30 p-4 rounded-lg">
-									<div className="text-2xl font-bold text-gray-900 dark:text-white">
-										{analytics.conversion}%
-									</div>
-									<div className="text-sm text-gray-500 dark:text-gray-400">
-										Конверсия
-									</div>
-								</div>
-								<div className="bg-gray-50 dark:bg-neutral-700/30 p-4 rounded-lg">
-									<div className="text-2xl font-bold text-gray-900 dark:text-white">
-										{analytics.cartAdds}
-									</div>
-									<div className="text-sm text-gray-500 dark:text-gray-400">
-										В корзине
-									</div>
-								</div>
-								<div className="bg-gray-50 dark:bg-neutral-700/30 p-4 rounded-lg">
-									<div className="text-2xl font-bold text-gray-900 dark:text-white">
-										{analytics.buyouts}
-									</div>
-									<div className="text-sm text-gray-500 dark:text-gray-400">
-										Выкупы
-									</div>
-								</div>
+								<MetricCard
+									value={analytics.views}
+									label="Просмотры"
+									trend="up"
+								/>
+								<MetricCard
+									value={`${analytics.conversion}%`}
+									label="Конверсия"
+									trend="down"
+								/>
+								<MetricCard
+									value={analytics.cartAdds}
+									label="В корзине"
+									trend="up"
+								/>
+								<MetricCard
+									value={analytics.buyouts}
+									label="Выкупы"
+									trend="neutral"
+								/>
 							</div>
 
-							<div className="bg-gray-100 dark:bg-neutral-700 p-4 rounded-lg text-center">
-								<div className="flex items-center justify-center text-gray-500 dark:text-gray-400 mb-2">
-									<Target size={18} className="mr-2" />
-									<span>
-										Графики и расширенная аналитика доступны
-										в PRO-версии
-									</span>
-								</div>
-								<button className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:underline">
-									Перейти на PRO
-								</button>
-							</div>
+							<OnlyForPro
+								text="Графики и расширенная аналитика доступны в PRO"
+								icon={Target}
+							/>
 						</div>
 					)}
 
@@ -528,7 +570,7 @@ export default function ProductDetailPage() {
 								История цен
 							</h2>
 
-							<div className="overflow-x-auto">
+							<div className="overflow-x-auto mb-6">
 								<table className="w-full text-sm">
 									<thead className="bg-gray-50 dark:bg-neutral-700 text-left text-gray-600 dark:text-gray-300">
 										<tr>
@@ -540,6 +582,9 @@ export default function ProductDetailPage() {
 											</th>
 											<th className="px-4 py-3 font-semibold">
 												Изменение
+											</th>
+											<th className="px-4 py-3 font-semibold">
+												Тренд
 											</th>
 										</tr>
 									</thead>
@@ -563,24 +608,30 @@ export default function ProductDetailPage() {
 														change={item.change}
 													/>
 												</td>
+												<td className="px-4 py-3 text-gray-400">
+													{/* Мини-график-заглушка */}
+													<svg
+														className="w-20 h-6 opacity-40"
+														fill="none"
+														stroke="currentColor"
+														viewBox="0 0 100 30"
+													>
+														<path
+															d="M0,20 L20,10 L40,15 L60,5 L80,12 L100,8"
+															strokeWidth="2"
+														/>
+													</svg>
+												</td>
 											</tr>
 										))}
 									</tbody>
 								</table>
 							</div>
 
-							<div className="mt-6 bg-gray-100 dark:bg-neutral-700 p-4 rounded-lg text-center">
-								<div className="flex items-center justify-center text-gray-500 dark:text-gray-400 mb-2">
-									<TrendingUp size={18} className="mr-2" />
-									<span>
-										График изменения цены и прогнозы
-										доступны в PRO-версии
-									</span>
-								</div>
-								<button className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:underline">
-									Перейти на PRO
-								</button>
-							</div>
+							<OnlyForPro
+								text="График изменения цены и прогнозы доступны в PRO"
+								icon={TrendingUp}
+							/>
 						</div>
 					)}
 
@@ -616,11 +667,7 @@ export default function ProductDetailPage() {
 													? "bg-green-50 dark:bg-green-900/20"
 													: "bg-gray-50 dark:bg-neutral-700/30"
 											}`}
-											onClick={() =>
-												setExpandedRecommendations(
-													!expandedRecommendations
-												)
-											}
+											onClick={() => toggleExpand(rec.id)}
 										>
 											<div className="flex items-center">
 												<div className="flex items-center justify-center w-5 h-5 rounded-full border border-gray-300 dark:border-neutral-600 mr-3">
@@ -666,7 +713,7 @@ export default function ProductDetailPage() {
 											</div>
 										</div>
 
-										{expandedRecommendations && (
+										{expandedIds.includes(rec.id) && (
 											<div className="p-4 border-t border-gray-200 dark:border-neutral-700">
 												<p className="text-gray-700 dark:text-gray-300 mb-3">
 													{rec.description}
@@ -688,23 +735,10 @@ export default function ProductDetailPage() {
 								Анализ конкурентов
 							</h2>
 
-							<div className="bg-gray-100 dark:bg-neutral-700 p-6 rounded-lg text-center">
-								<div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 mb-4">
-									<BarChart3 size={32} className="mb-2" />
-									<span className="text-lg font-medium">
-										Анализ конкурентов доступен в PRO-версии
-									</span>
-									<p className="mt-2 max-w-md">
-										Сравните цены, рейтинги и позиции в
-										поиске среди конкурентов. Получайте
-										рекомендации по улучшению
-										позиционирования товара.
-									</p>
-								</div>
-								<button className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-lg transition-colors">
-									Перейти на PRO
-								</button>
-							</div>
+							<OnlyForPro
+								text="Анализ конкурентов доступен в PRO-версии"
+								icon={BarChart3}
+							/>
 						</div>
 					)}
 				</div>
@@ -741,7 +775,7 @@ export default function ProductDetailPage() {
 									<span className="text-sm text-gray-600 dark:text-gray-400">
 										Статус
 									</span>
-									<span className="inline-flex items-center text-sm font-medium text-green-600 dark:text-green-400">
+									<span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
 										<CheckCircle
 											size={14}
 											className="mr-1"
@@ -749,20 +783,12 @@ export default function ProductDetailPage() {
 										Активный
 									</span>
 								</div>
-
-								<div className="flex items-center justify-between">
-									<span className="text-sm text-gray-600 dark:text-gray-400">
-										Мониторинг цен
-									</span>
-									<span className="inline-flex items-center text-sm font-medium text-green-600 dark:text-green-400">
-										<CheckCircle
-											size={14}
-											className="mr-1"
-										/>{" "}
-										Включен
-									</span>
-								</div>
 							</div>
+
+							<button className="mt-4 w-full text-sm text-blue-600 dark:text-blue-400 font-medium hover:underline flex items-center justify-center">
+								<RefreshCw size={14} className="mr-1" />{" "}
+								Обновить данные
+							</button>
 						</div>
 
 						{/* Последние изменения */}
@@ -771,91 +797,25 @@ export default function ProductDetailPage() {
 								Последние изменения
 							</h3>
 
-							<div className="space-y-3">
-								<div className="flex items-start">
-									<div className="flex-shrink-0 mt-0.5">
-										<div className="w-2 h-2 rounded-full bg-blue-500"></div>
+							<div className="relative pl-3 border-l border-gray-200 dark:border-neutral-700 space-y-4">
+								{changes.map((ch, idx) => (
+									<div key={idx} className="flex items-start">
+										<div className="absolute -left-1.5 mt-1 w-3 h-3 rounded-full bg-blue-500" />
+										<div>
+											<p className="text-sm text-gray-900 dark:text-white">
+												{ch.text}
+											</p>
+											<p className="text-xs text-gray-500 dark:text-gray-400">
+												{ch.time}
+											</p>
+										</div>
 									</div>
-									<div className="ml-3">
-										<p className="text-sm text-gray-900 dark:text-white">
-											Цена уменьшена на 100₽
-										</p>
-										<p className="text-xs text-gray-500 dark:text-gray-400">
-											Сегодня в 14:30
-										</p>
-									</div>
-								</div>
-
-								<div className="flex items-start">
-									<div className="flex-shrink-0 mt-0.5">
-										<div className="w-2 h-2 rounded-full bg-green-500"></div>
-									</div>
-									<div className="ml-3">
-										<p className="text-sm text-gray-900 dark:text-white">
-											Добавлено 3 новых отзыва
-										</p>
-										<p className="text-xs text-gray-500 dark:text-gray-400">
-											Вчера в 09:15
-										</p>
-									</div>
-								</div>
-
-								<div className="flex items-start">
-									<div className="flex-shrink-0 mt-0.5">
-										<div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-									</div>
-									<div className="ml-3">
-										<p className="text-sm text-gray-900 dark:text-white">
-											Рейтинг изменился с 4.6 до 4.7
-										</p>
-										<p className="text-xs text-gray-500 dark:text-gray-400">
-											20 ноября
-										</p>
-									</div>
-								</div>
+								))}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	);
-}
-
-// Добавляем недостающие иконки
-function RefreshCw(props: any) {
-	return (
-		<svg
-			{...props}
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-			<path d="M21 3v5h-5" />
-			<path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-			<path d="M8 16H3v5" />
-		</svg>
-	);
-}
-
-function Trash2(props: any) {
-	return (
-		<svg
-			{...props}
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="M3 6h18" />
-			<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-			<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-		</svg>
 	);
 }
