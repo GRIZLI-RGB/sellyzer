@@ -1,14 +1,19 @@
-import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+	pgTable,
+	serial,
+	timestamp,
+	varchar,
+	integer,
+	pgEnum,
+} from "drizzle-orm/pg-core";
+
+export const authProviderEnum = pgEnum("auth_provider", ["GOOGLE", "TELEGRAM"]);
 
 export const users = pgTable("users", {
 	id: serial("id").primaryKey(),
+	authProvider: authProviderEnum("auth_provider").notNull(),
 	email: varchar("email", { length: 256 }).unique(),
-	name: varchar("name", { length: 128 }),
-	avatarUrl: text("avatar_url"),
-	authProvider: varchar("auth_provider", { length: 32 })
-		.$type<"google" | "telegram">()
-		.notNull(),
-	telegramId: varchar("telegram_id", { length: 64 }),
+	telegramId: varchar("telegram_id", { length: 64 }).unique(),
+	balance: integer("balance").default(0).notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

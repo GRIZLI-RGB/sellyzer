@@ -1,3 +1,3 @@
-export default function Terms() {
+export default function TermsPage() {
 	return <></>;
 }
