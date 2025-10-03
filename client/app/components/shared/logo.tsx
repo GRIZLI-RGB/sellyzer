@@ -19,9 +19,7 @@ export default function Logo({ onlyIcon = false }: { onlyIcon?: boolean }) {
 			/>
 
 			{!onlyIcon && (
-				<span className="text-lg font-semibold hidden md:inline">
-					Sellyzer
-				</span>
+				<span className="text-lg font-semibold">Sellyzer</span>
 			)}
 		</div>
 	);
