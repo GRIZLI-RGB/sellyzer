@@ -16,6 +16,10 @@
 		"Courier New", monospace;
 }
 
+body::-webkit-scrollbar {
+	display: none;
+}
+
 /* TODO: шрифты сделать через import.meta.env.BASE_URL в BaseLayout */
 /* ---- local Inter fonts (woff2) ---- */
 @font-face {
@@ -57,7 +61,6 @@ textarea {
 	-moz-osx-font-smoothing: grayscale;
 	text-rendering: optimizeLegibility;
 	font-kerning: normal;
-	/* font-feature-settings helps small-caps/ligatures if available */
 	font-feature-settings: "liga" 1, "kern" 1;
 }
 
@@ -70,15 +73,13 @@ body {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
-	/* adaptive base size: 16–20px depending on viewport */
 	font-size: clamp(16px, 1.125rem + 0.2vw, 20px);
-	/* Inter looks good with slightly tighter line-height than heavy serif */
 	line-height: 1.6;
 }
 
 /* layout */
 main {
-	width: 720px;
+	width: 1020px;
 	max-width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
