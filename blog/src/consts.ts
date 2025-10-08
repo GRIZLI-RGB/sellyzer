@@ -1,5 +1,5 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
-
-export const SITE_TITLE = 'Sellyzer | Blog';
-export const SITE_DESCRIPTION = 'Welcome to sellyzer blog!';
+export const SITE_TITLE = "Sellyzer Blog";
+export const SITE_DESCRIPTION =
+	"Новости, инсайты и обновления платформы Sellyzer.";
+export const SITE_URL = "https://sellyzer.ru";
+export const SITE_BLOG_URL = "https://sellyzer.ru/blog";

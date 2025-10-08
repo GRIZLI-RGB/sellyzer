@@ -16,31 +16,32 @@
 		"Courier New", monospace;
 }
 
+/* TODO: шрифты сделать через import.meta.env.BASE_URL в BaseLayout */
 /* ---- local Inter fonts (woff2) ---- */
 @font-face {
 	font-family: "Inter";
-	src: url("/fonts/inter/regular.woff2") format("woff2");
+	src: url("/blog/fonts/inter/regular.woff2") format("woff2");
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
 	font-family: "Inter";
-	src: url("/fonts/inter/medium.woff2") format("woff2");
+	src: url("/blog/fonts/inter/medium.woff2") format("woff2");
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
 	font-family: "Inter";
-	src: url("/fonts/inter/semibold.woff2") format("woff2");
+	src: url("/blog/fonts/inter/semibold.woff2") format("woff2");
 	font-weight: 600;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
 	font-family: "Inter";
-	src: url("/fonts/inter/bold.woff2") format("woff2");
+	src: url("/blog/fonts/inter/bold.woff2") format("woff2");
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
