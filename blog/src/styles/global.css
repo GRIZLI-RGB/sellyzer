@@ -68,21 +68,19 @@ body {
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
+	background: #fff;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
-	font-size: clamp(16px, 1.125rem + 0.2vw, 20px);
+	font-size: clamp(16px, 1rem + 0.2vw, 18px);
 	line-height: 1.6;
 }
 
 /* layout */
 main {
-	width: 1020px;
-	max-width: calc(100% - 2em);
+	max-width: 1280px;
 	margin: auto;
-	padding: 3em 1em;
+	padding: 2em 1em;
 }
 
 /* headings */
@@ -134,6 +132,7 @@ a {
 	color: var(--accent);
 	text-decoration-skip-ink: auto;
 }
+
 a:hover,
 a:focus {
 	color: var(--accent-dark);
@@ -143,6 +142,12 @@ a:focus {
 /* readable paragraphs */
 p {
 	margin-bottom: 1em;
+}
+
+*,
+*::after,
+*::before {
+	transition: all 0.2s;
 }
 
 /* lead paragraph (big intro) */
