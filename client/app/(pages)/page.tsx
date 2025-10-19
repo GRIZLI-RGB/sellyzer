@@ -5,9 +5,9 @@ import { useState } from "react";
 import { FaEnvelope, FaTelegram } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import ReactCompareImage from "react-compare-image";
+import Image from "next/image";
 
 import Logo from "../components/shared/logo";
-import Image from "next/image";
 
 export default function LandingPage() {
 	const [isTelegramHover, setIsTelegramHover] = useState(false);

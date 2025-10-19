@@ -1,10 +1,15 @@
+article {
+	color: rgb(var(--gray-dark));
+	line-height: 1.7;
+}
+
 article h1,
 article h2,
 article h3,
 article h4,
 article h5,
 article h6 {
-	margin: 0 0 0.5rem 0;
+	margin: 0 0 1.25rem 0;
 	line-height: 1.15;
 	font-family: var(--font-sans);
 	text-rendering: optimizeLegibility;
@@ -48,12 +53,15 @@ article b {
 article a {
 	color: var(--accent);
 	text-decoration-skip-ink: auto;
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+	transition: all 0.2s ease;
 }
 
 article a:hover,
 article a:focus {
 	color: var(--accent-dark);
-	text-decoration: underline;
+	border-bottom-color: var(--accent-dark);
 }
 
 article .lead {
@@ -78,6 +86,7 @@ article img {
 	display: block;
 	margin: 1.25rem 0;
 	object-fit: cover;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.12);
 }
 
 article code {
@@ -93,6 +102,7 @@ article pre {
 	border-radius: 8px;
 	background-color: rgb(var(--gray-light));
 	overflow: auto;
+	border-left: 4px solid var(--accent);
 }
 
 article pre > code {
@@ -104,17 +114,22 @@ article pre > code {
 }
 
 article blockquote {
+	color: rgba(var(--gray-dark), 0.85);
+	background-color: rgba(var(--gray-light), 0.3);
 	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
-	font-size: 1.133em;
-	color: rgba(var(--gray-dark), 0.95);
+	padding: 1.5em;
+	margin: 2em 0;
+	border-radius: 0 8px 8px 0;
+}
+
+article blockquote p {
+	margin-bottom: 0;
 }
 
 article hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-light));
-	margin: 2rem 0;
+	margin: 3rem 0;
 }
 
 article ul,
@@ -123,7 +138,6 @@ article ol {
 	margin: 1.5rem 2rem;
 }
 
-/* Добавьте в _typography.css */
 .line-clamp-2 {
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
@@ -143,4 +157,18 @@ article ol {
 	-webkit-line-clamp: 4;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
+}
+
+@media (max-width: 768px) {
+	article h1 {
+		font-size: clamp(28px, 8vw, 42px);
+	}
+
+	article h2 {
+		font-size: clamp(22px, 6vw, 32px);
+	}
+
+	article h3 {
+		font-size: clamp(18px, 5vw, 26px);
+	}
 }

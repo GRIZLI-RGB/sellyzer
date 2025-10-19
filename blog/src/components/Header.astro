@@ -64,8 +64,8 @@ import Logo from "./Logo.astro";
 							),
 						},
 						{
-							text: "Ресурсы",
-							href: "/blog/resources",
+							text: "Кейсы",
+							href: "/blog/cases",
 							icon: (
 								<svg
 									class="w-4 h-4 flex-shrink-0"
@@ -162,10 +162,9 @@ import Logo from "./Logo.astro";
 		</div>
 	</div>
 
-	<!-- Мобильное меню (выпадающее) -->
 	<div
 		id="mobile-menu"
-		class="lg:hidden hidden bg-white border-t border-blue-100 shadow-lg transform -translate-y-2 opacity-0 transition-all duration-300 ease-out"
+		class="lg:hidden hidden fixed top-[70px] left-0 right-0 bg-white border-t border-blue-100 shadow-lg transform -translate-y-2 opacity-0 transition-all duration-300 ease-out z-50 max-h-[calc(100vh-4rem)] overflow-y-auto"
 	>
 		<nav class="default-container py-4 flex flex-col space-y-3">
 			<a
@@ -207,7 +206,7 @@ import Logo from "./Logo.astro";
 				Гайды
 			</a>
 			<a
-				href="/blog/resources"
+				href="/blog/cases"
 				class="flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-blue-600 px-4 py-3 rounded-lg hover:bg-blue-50 transition-base"
 			>
 				<svg
@@ -223,7 +222,7 @@ import Logo from "./Logo.astro";
 						d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
 					></path>
 				</svg>
-				Ресурсы
+				Кейсы
 			</a>
 			<a
 				href="/blog/about"

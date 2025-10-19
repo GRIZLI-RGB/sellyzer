@@ -4,7 +4,6 @@
 @import "./_typography.css";
 @import "./_utilities.css";
 @import "./_animations.css";
-@import "./_accessibility.css";
 
 @theme inline {
 	--color-primary: #1f2937;
