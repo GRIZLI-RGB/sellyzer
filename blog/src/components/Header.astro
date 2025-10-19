@@ -1,137 +1,331 @@
 ---
 import Logo from "./Logo.astro";
-import HeaderLink from "./HeaderLink.astro";
 ---
 
-<header class="header">
-	<nav class="nav">
-		<a href="/" class="logo-wrap">
-			<Logo />
-		</a>
-
-		<div class="links">
-			<HeaderLink href="/">Главная</HeaderLink>
-			<HeaderLink href="/guides">Гайды</HeaderLink>
-			<HeaderLink href="/resources">Ресурсы</HeaderLink>
-			<HeaderLink href="/about">О проекте</HeaderLink>
-
-			<a
-				target="_blank"
-				href="https://sellyzer.ru"
-				class="app-link"
-				rel="noopener noreferrer"
-			>
-				<img src={`${import.meta.env.BASE_URL}/logo.svg`} alt="Sellyzer logo" />
-				Платформа
+<header
+	class="bg-gradient-to-b py-4 from-white to-blue-50/30 border-b border-blue-100 sticky top-0 z-50"
+>
+	<div class="default-container flex items-center justify-between">
+		<div class="flex items-center gap-6 lg:gap-10">
+			<a href="/blog" class="flex items-center gap-2.5">
+				<Logo onlyIcon size={32} />
+				<div class="flex flex-col">
+					<span class="text-lg font-bold leading-[100%]">
+						Sellyzer
+					</span>
+					<span
+						class="text-xs text-gray-500 font-medium leading-[100%]"
+					>
+						Блог
+					</span>
+				</div>
 			</a>
+
+			<!-- Десктопная навигация -->
+			<nav class="hidden lg:flex items-center gap-2">
+				{
+					[
+						{
+							text: "Главная",
+							href: "/blog",
+							icon: (
+								<svg
+									class="w-4 h-4 flex-shrink-0"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+									/>
+								</svg>
+							),
+						},
+						{
+							text: "Гайды",
+							href: "/blog/guides",
+							icon: (
+								<svg
+									class="w-4 h-4 flex-shrink-0"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+									/>
+								</svg>
+							),
+						},
+						{
+							text: "Ресурсы",
+							href: "/blog/resources",
+							icon: (
+								<svg
+									class="w-4 h-4 flex-shrink-0"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+									/>
+								</svg>
+							),
+						},
+						{
+							text: "О проекте",
+							href: "/blog/about",
+							icon: (
+								<svg
+									class="w-4 h-4 flex-shrink-0"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+							),
+						},
+					].map(({ text, href, icon }) => (
+						<a
+							href={href}
+							class="header-link px-4 rounded-lg flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-base py-2"
+						>
+							{icon}
+							{text}
+						</a>
+					))
+				}
+			</nav>
 		</div>
-	</nav>
+
+		<div class="flex items-center gap-3">
+			<!-- Кнопка платформы -->
+			<a
+				href="https://sellyzer.ru"
+				target="_blank"
+				class="bg-white text-blue-600 border border-blue-200 px-4 lg:px-5 py-2 lg:py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-base shadow-sm hover:shadow-lg flex items-center gap-2 lg:gap-3 group"
+			>
+				<span class="hidden sm:inline">Открыть платформу</span>
+				<span class="sm:hidden">Платформа</span>
+				<div
+					class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-base"
+				>
+					<svg
+						class="w-3 h-3 text-blue-600 group-hover:text-white transition-base"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+					</svg>
+				</div>
+			</a>
+
+			<!-- Бургер-меню для мобильных -->
+			<button
+				id="mobile-menu-button"
+				class="lg:hidden p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-base"
+			>
+				<svg
+					class="w-5 h-5"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M4 6h16M4 12h16M4 18h16"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+
+	<!-- Мобильное меню (выпадающее) -->
+	<div
+		id="mobile-menu"
+		class="lg:hidden hidden bg-white border-t border-blue-100 shadow-lg transform -translate-y-2 opacity-0 transition-all duration-300 ease-out"
+	>
+		<nav class="default-container py-4 flex flex-col space-y-3">
+			<a
+				href="/blog"
+				class="flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-blue-600 px-4 py-3 rounded-lg hover:bg-blue-50 transition-base"
+			>
+				<svg
+					class="w-4 h-4 flex-shrink-0"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+					></path>
+				</svg>
+				Главная
+			</a>
+			<a
+				href="/blog/guides"
+				class="flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-blue-600 px-4 py-3 rounded-lg hover:bg-blue-50 transition-base"
+			>
+				<svg
+					class="w-4 h-4 flex-shrink-0"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+					></path>
+				</svg>
+				Гайды
+			</a>
+			<a
+				href="/blog/resources"
+				class="flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-blue-600 px-4 py-3 rounded-lg hover:bg-blue-50 transition-base"
+			>
+				<svg
+					class="w-4 h-4 flex-shrink-0"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+					></path>
+				</svg>
+				Ресурсы
+			</a>
+			<a
+				href="/blog/about"
+				class="flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-blue-600 px-4 py-3 rounded-lg hover:bg-blue-50 transition-base"
+			>
+				<svg
+					class="w-4 h-4 flex-shrink-0"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+					></path>
+				</svg>
+				О проекте
+			</a>
+		</nav>
+	</div>
 </header>
 
-<style>
-	:root {
-		--accent: #2337ff;
-		--accent-hover: #1e2fcc;
-		--text: #1f2937;
-		--bg: #ffffff;
-		--border: rgba(0, 0, 0, 0.06);
+<script>
+	// Простой скрипт для управления мобильным меню
+	const mobileMenuButton = document.getElementById("mobile-menu-button");
+	const mobileMenu = document.getElementById("mobile-menu");
+
+	if (mobileMenuButton && mobileMenu) {
+		mobileMenuButton.addEventListener("click", () => {
+			const isHidden = mobileMenu.classList.contains("hidden");
+
+			if (isHidden) {
+				// Показываем меню с анимацией
+				mobileMenu.classList.remove("hidden");
+				setTimeout(() => {
+					mobileMenu.classList.remove("opacity-0", "-translate-y-2");
+					mobileMenu.classList.add("opacity-100", "translate-y-0");
+				}, 10);
+
+				// Меняем иконку на крестик
+				mobileMenuButton.innerHTML = `
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				`;
+			} else {
+				// Скрываем меню с анимацией
+				mobileMenu.classList.remove("opacity-100", "translate-y-0");
+				mobileMenu.classList.add("opacity-0", "-translate-y-2");
+
+				setTimeout(() => {
+					mobileMenu.classList.add("hidden");
+				}, 300);
+
+				// Возвращаем иконку бургера
+				mobileMenuButton.innerHTML = `
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+					</svg>
+				`;
+			}
+		});
+
+		// Закрываем меню при клике на ссылку
+		const mobileLinks = mobileMenu.querySelectorAll("a");
+		mobileLinks.forEach((link) => {
+			link.addEventListener("click", () => {
+				mobileMenu.classList.remove("opacity-100", "translate-y-0");
+				mobileMenu.classList.add("opacity-0", "-translate-y-2");
+
+				setTimeout(() => {
+					mobileMenu.classList.add("hidden");
+				}, 300);
+
+				mobileMenuButton.innerHTML = `
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+					</svg>
+				`;
+			});
+		});
 	}
 
-	.header {
-		background: var(--bg);
-		border-bottom: 1px solid var(--border);
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-		padding: 0 1.25rem;
-		position: sticky;
-		top: 0;
-		z-index: 50;
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		transition:
-			background 0.3s ease,
-			border-color 0.3s ease,
-			box-shadow 0.3s ease;
+	// Функция для определения активной страницы
+	function setActiveNavLink() {
+		const currentPath = window.location.pathname;
+		const navLinks = document.querySelectorAll("nav a.header-link");
+
+		navLinks.forEach((link) => {
+			const linkPath = link.getAttribute("href");
+			if (
+				linkPath === currentPath ||
+				(currentPath.startsWith(linkPath || "") && linkPath !== "/blog")
+			) {
+				link.classList.add("text-blue-600", "bg-blue-50");
+				link.classList.remove("text-gray-700");
+			}
+		});
 	}
 
-	.nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		max-width: 1280px;
-		margin: 0 auto;
-	}
-
-	.logo-wrap {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		text-decoration: none;
-	}
-
-	.links {
-		display: flex;
-		align-items: center;
-		gap: 1.5rem;
-	}
-
-	.links a {
-		font-size: 1rem;
-		font-weight: 500;
-		color: var(--text);
-		text-decoration: none;
-		padding: 0.4rem 0.2rem;
-		border-bottom: 2px solid transparent;
-		transition:
-			color 0.2s ease,
-			border-color 0.2s ease;
-	}
-
-	.links a:hover {
-		color: var(--accent);
-	}
-
-	.links a.active {
-		color: var(--accent);
-		border-bottom-color: var(--accent);
-	}
-
-	.app-link {
-		background: var(--accent) !important;
-		color: #fff !important;
-		padding: 0.55rem 1.1rem !important;
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		line-height: 100%;
-		border-radius: 0.5rem;
-		font-weight: 600;
-		font-size: 0.95rem;
-		box-shadow: 0 2px 6px rgba(35, 55, 255, 0.15);
-		transition: all 0.2s ease;
-	}
-
-	.app-link img {
-		width: 20px;
-		height: 20px;
-		display: block;
-		margin: 0;
-	}
-
-	.app-link:hover {
-		background: var(--accent-hover);
-		box-shadow: 0 3px 8px rgba(35, 55, 255, 0.25);
-	}
-
-	/* --- Responsive --- */
-	@media (max-width: 768px) {
-		.links {
-			gap: 1rem;
-		}
-		.links a {
-			font-size: 0.95rem;
-		}
-		.app-link {
-			padding: 0.5rem 0.9rem;
-		}
-	}
-</style>
+	// Вызываем при загрузке страницы
+	document.addEventListener("DOMContentLoaded", setActiveNavLink);
+</script>

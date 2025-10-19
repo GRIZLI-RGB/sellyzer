@@ -1,0 +1,151 @@
+body,
+button,
+input,
+textarea {
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	font-kerning: normal;
+	font-feature-settings: "liga" 1, "kern" 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 0 0.5rem 0;
+	color: rgb(var(--black));
+	line-height: 1.15;
+	font-family: var(--font-sans);
+	text-rendering: optimizeLegibility;
+}
+
+h1 {
+	font-size: clamp(28px, 5.5vw, 48px);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+h2 {
+	font-size: clamp(22px, 4.2vw, 36px);
+	font-weight: 600;
+}
+
+h3 {
+	font-size: clamp(18px, 3.2vw, 28px);
+	font-weight: 600;
+}
+
+h4 {
+	font-size: 1.563em;
+	font-weight: 600;
+}
+
+h5 {
+	font-size: 1.25em;
+	font-weight: 500;
+}
+
+h6 {
+	font-weight: 500;
+}
+
+strong,
+b {
+	font-weight: 700;
+}
+
+article a {
+	color: var(--accent);
+	text-decoration-skip-ink: auto;
+}
+
+article a:hover,
+article a:focus {
+	color: var(--accent-dark);
+	text-decoration: underline;
+}
+
+.lead {
+	font-size: clamp(1.05rem, 1rem + 0.6vw, 1.25rem);
+	color: rgba(var(--gray-dark), 0.95);
+	margin-bottom: 1.25rem;
+	line-height: 1.7;
+}
+
+p {
+	margin-bottom: 1em;
+}
+
+.prose p {
+	margin-bottom: 2em;
+}
+
+textarea {
+	width: 100%;
+	font-size: inherit;
+}
+
+input {
+	font-size: inherit;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+article img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	display: block;
+	margin: 1.25rem 0;
+	object-fit: cover;
+}
+
+code {
+	font-family: var(--font-mono);
+	font-size: 0.95em;
+	padding: 2px 6px;
+	background-color: rgb(var(--gray-light));
+	border-radius: 6px;
+}
+
+pre {
+	padding: 1.5em;
+	border-radius: 8px;
+	background-color: rgb(var(--gray-light));
+	overflow: auto;
+}
+
+pre > code {
+	all: unset;
+	display: block;
+	font-family: var(--font-mono);
+	font-size: 0.92rem;
+	line-height: 1.45;
+}
+
+blockquote {
+	border-left: 4px solid var(--accent);
+	padding: 0 0 0 20px;
+	margin: 0;
+	font-size: 1.133em;
+	color: rgba(var(--gray-dark), 0.95);
+}
+
+hr {
+	border: none;
+	border-top: 1px solid rgb(var(--gray-light));
+	margin: 2rem 0;
+}
+
+article ul,
+article ol {
+	list-style: unset;
+	margin: 1.5rem 2rem;
+}
