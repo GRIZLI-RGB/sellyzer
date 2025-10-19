@@ -1,0 +1,21 @@
+---
+import BasePageHead from "../components/BasePageHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ru">
+	<head>
+		<BasePageHead title={title} description={description} />
+	</head>
+
+	<body>
+		<Header />
+		<main class="py-8"><slot /></main>
+		<Footer />
+	</body>
+</html>

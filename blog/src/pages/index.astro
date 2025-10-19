@@ -1,150 +1,135 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import BasePageLayout from "../layouts/BasePageLayout.astro";
 
 const posts = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---
 
-<!doctype html>
-<html lang="ru">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main class="bg-white py-8">
-			{
-				posts.length > 0 && (
-					<section class="default-container mb-8">
-						<a href={`/blog/${posts[0].id}/`} class="group">
-							<div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-8 md:p-12">
-								<div class="grid lg:grid-cols-2 gap-8 items-center">
-									<div class="order-2 lg:order-1">
-										<span class="inline-block bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
-											Новая статья
-										</span>
-										<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-base">
-											{posts[0].data.title}
-										</h2>
-										<p class="text-gray-600 text-lg mb-6 leading-relaxed">
-											{posts[0].data.description}
-										</p>
-										<div class="flex items-center gap-4 text-sm text-gray-500">
-											<FormattedDate
-												date={posts[0].data.pubDate}
-											/>
-											<span>•</span>
-											<span>Читать статью →</span>
-										</div>
-									</div>
-									<div class="order-1 lg:order-2">
-										{posts[0].data.heroImage && (
-											<div class="relative overflow-hidden rounded-xl aspect-video">
-												<Image
-													width={600}
-													height={400}
-													src={
-														posts[0].data.heroImage
-													}
-													alt={posts[0].data.title}
-													class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-												/>
-											</div>
-										)}
-									</div>
+<BasePageLayout>
+	{
+		posts.length > 0 && (
+			<section class="default-container mb-8">
+				<a href={`/blog/${posts[0].id}/`} class="group">
+					<div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-8 md:p-12">
+						<div class="grid lg:grid-cols-2 gap-8 items-center">
+							<div class="order-2 lg:order-1">
+								<span class="inline-block bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+									Новая статья
+								</span>
+								<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-base">
+									{posts[0].data.title}
+								</h2>
+								<p class="text-gray-600 text-lg mb-6 leading-relaxed">
+									{posts[0].data.description}
+								</p>
+								<div class="flex items-center gap-4 text-sm text-gray-500">
+									<FormattedDate
+										date={posts[0].data.pubDate}
+									/>
+									<span>•</span>
+									<span>Читать статью →</span>
 								</div>
 							</div>
-						</a>
-					</section>
-				)
-			}
-
-			<section class="default-container pb-16 md:pb-24">
-				<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{
-						posts.slice(1).map((post) => (
-							<article class="bg-white border border-gray-200 rounded-2xl p-6 hover:border-gray-300 transition-base group underline-none">
-								<a href={`/blog/${post.id}/`} class="block">
-									{post.data.heroImage && (
-										<div class="relative overflow-hidden rounded-lg aspect-video mb-4">
-											<Image
-												width={400}
-												height={250}
-												src={post.data.heroImage}
-												alt={post.data.title}
-												class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-											/>
-										</div>
-									)}
-									<div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-										<FormattedDate
-											date={post.data.pubDate}
+							<div class="order-1 lg:order-2">
+								{posts[0].data.heroImage && (
+									<div class="relative overflow-hidden rounded-xl aspect-video">
+										<Image
+											width={600}
+											height={400}
+											src={posts[0].data.heroImage}
+											alt={posts[0].data.title}
+											class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
 										/>
 									</div>
-									<h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-base line-clamp-2">
-										{post.data.title}
-									</h3>
-									<p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
-										{post.data.description}
-									</p>
-									<div class="flex items-center gap-2 text-sm text-blue-600 mt-4 font-medium">
-										<span>Читать</span>
-										<svg
-											class="w-4 h-4 group-hover:translate-x-1 transition-transform"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M14 5l7 7m0 0l-7 7m7-7H3"
-											/>
-										</svg>
-									</div>
-								</a>
-							</article>
-						))
-					}
-				</div>
-
-				{/* Empty State */}
-				{
-					posts.length === 0 && (
-						<div class="text-center py-16">
-							<svg
-								class="w-16 h-16 text-gray-300 mx-auto mb-4"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="1"
-									d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-								/>
-							</svg>
-							<h3 class="text-xl font-semibold text-gray-900 mb-2">
-								Статьи скоро появятся
-							</h3>
-							<p class="text-gray-600">
-								Мы готовим для вас полезные материалы по
-								маркетплейсам.
-							</p>
+								)}
+							</div>
 						</div>
-					)
-				}
+					</div>
+				</a>
 			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+		)
+	}
+
+	<section class="default-container pb-16 md:pb-24">
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+			{
+				posts.slice(1).map((post) => (
+					<a
+						href={`/blog/${post.id}/`}
+						class="block bg-white border border-gray-200 rounded-2xl p-6 hover:border-gray-300 transition-base group underline-none"
+					>
+						{post.data.heroImage && (
+							<div class="relative overflow-hidden rounded-lg aspect-video mb-4">
+								<Image
+									width={400}
+									height={250}
+									src={post.data.heroImage}
+									alt={post.data.title}
+									class="w-full min-h-full block object-cover group-hover:scale-105 transition-transform duration-300"
+								/>
+							</div>
+						)}
+						<h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-base line-clamp-2">
+							{post.data.title}
+						</h3>
+						<p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+							{post.data.description}
+						</p>
+						<div class="flex items-center justify-between mt-4">
+							<div class="flex items-center gap-2 text-sm text-gray-500">
+								<FormattedDate date={post.data.pubDate} />
+							</div>
+							<div class="flex items-center gap-2 text-sm text-blue-600 font-medium">
+								<span>Читать</span>
+								<svg
+									class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M14 5l7 7m0 0l-7 7m7-7H3"
+									/>
+								</svg>
+							</div>
+						</div>
+					</a>
+				))
+			}
+		</div>
+
+		{
+			posts.length === 0 && (
+				<div class="text-center py-16 max-w-lg mx-auto">
+					<svg
+						class="w-16 h-16 text-gray-300 mx-auto mb-4"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="1"
+							d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+						/>
+					</svg>
+					<h3 class="text-xl font-semibold text-gray-900 mb-2">
+						Статьи скоро появятся
+					</h3>
+					<p class="text-gray-600">
+						Мы готовим для вас полезные материалы по маркетплейсам,
+						они скоро появятся здесь!
+					</p>
+				</div>
+			)
+		}
+	</section>
+</BasePageLayout>
