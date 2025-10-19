@@ -6,7 +6,7 @@ import Logo from "./Logo.astro";
 	class="bg-white/80 py-4 border-b border-blue-100 sticky top-0 z-50 backdrop-blur-2xl"
 >
 	<div class="default-container flex items-center justify-between">
-		<div class="flex items-center gap-6 lg:gap-10">
+		<div class="flex items-center gap-10">
 			<a href="/blog" class="flex items-center gap-2.5">
 				<Logo onlyIcon size={32} />
 				<div class="flex flex-col">
@@ -22,7 +22,7 @@ import Logo from "./Logo.astro";
 			</a>
 
 			<!-- Десктопная навигация -->
-			<nav class="hidden lg:flex items-center gap-2">
+			<nav class="hidden lg:flex items-center">
 				{
 					[
 						{
@@ -121,8 +121,8 @@ import Logo from "./Logo.astro";
 				target="_blank"
 				class="bg-white text-blue-600 border border-blue-200 px-4 lg:px-5 py-2 lg:py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-base shadow-sm hover:shadow-lg flex items-center gap-2 lg:gap-3 group"
 			>
-				<span class="hidden sm:inline">Открыть платформу</span>
-				<span class="sm:hidden">Платформа</span>
+				<span class="hidden lg:inline">Открыть платформу</span>
+				<span class="lg:hidden">Платформа</span>
 				<div
 					class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-base"
 				>

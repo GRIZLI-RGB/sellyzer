@@ -1,0 +1,196 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BasePageLayout from "../layouts/BasePageLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+
+const allPosts = await getCollection("blog");
+const guidePosts = allPosts
+	.filter(
+		(post) =>
+			post.data.tags?.includes("guide") || post.data.category === "guides"
+	)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BasePageLayout
+	title="Гайды по маркетплейсам"
+	description="Пошаговые инструкции, руководства и практические советы по работе с Ozon, Wildberries и другими маркетплейсами"
+>
+	<!-- Featured Guide -->
+	{
+		guidePosts.length > 0 && (
+			<section class="default-container mb-16">
+				<a href={`/blog/${guidePosts[0].id}/`} class="group">
+					<div class="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-2xl p-8 md:p-12">
+						<div class="grid lg:grid-cols-2 gap-8 items-center">
+							<div class="order-2 lg:order-1">
+								<span class="inline-block bg-green-100 text-green-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+									Популярное
+								</span>
+								<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-base">
+									{guidePosts[0].data.title}
+								</h2>
+								<p class="text-gray-600 text-lg mb-6 leading-relaxed">
+									{guidePosts[0].data.description}
+								</p>
+								<div class="flex items-center gap-4 text-sm text-gray-500">
+									<FormattedDate
+										date={guidePosts[0].data.pubDate}
+									/>
+									<span>•</span>
+									<span>Изучить гайд →</span>
+								</div>
+							</div>
+							<div class="order-1 lg:order-2">
+								{guidePosts[0].data.heroImage && (
+									<div class="relative overflow-hidden rounded-xl aspect-video">
+										<Image
+											width={600}
+											height={400}
+											src={guidePosts[0].data.heroImage}
+											alt={guidePosts[0].data.title}
+											class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+										/>
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+				</a>
+			</section>
+		)
+	}
+
+	<!-- Guides Grid -->
+	<section class="default-container pb-16 md:pb-24">
+		<div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+			{
+				guidePosts.slice(1).map((post) => (
+					<a
+						href={`/blog/${post.id}/`}
+						class="block bg-white border border-green-100 rounded-2xl p-6 hover:border-green-300 transition-base group"
+					>
+						{post.data.heroImage && (
+							<div class="relative overflow-hidden rounded-lg aspect-video mb-4">
+								<Image
+									width={400}
+									height={250}
+									src={post.data.heroImage}
+									alt={post.data.title}
+									class="w-full min-h-full block object-cover group-hover:scale-105 transition-transform duration-300"
+								/>
+							</div>
+						)}
+						<div class="flex items-center gap-2 text-sm text-green-600 mb-3">
+							<svg
+								class="w-4 h-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+								/>
+							</svg>
+							<span>Гайд</span>
+						</div>
+						<h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-green-600 transition-base line-clamp-2">
+							{post.data.title}
+						</h3>
+						<p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+							{post.data.description}
+						</p>
+						<div class="flex items-center justify-between mt-4">
+							<div class="flex items-center gap-2 text-sm text-gray-500">
+								<FormattedDate date={post.data.pubDate} />
+							</div>
+							<div class="flex items-center gap-2 text-sm text-green-600 font-medium">
+								<span>Читать</span>
+								<svg
+									class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M14 5l7 7m0 0l-7 7m7-7H3"
+									/>
+								</svg>
+							</div>
+						</div>
+					</a>
+				))
+			}
+		</div>
+
+		{
+			guidePosts.length === 0 && (
+				<div class="text-center py-16 max-w-lg mx-auto">
+					<svg
+						class="w-16 h-16 text-gray-300 mx-auto mb-4"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="1"
+							d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+						/>
+					</svg>
+					<h3 class="text-xl font-semibold text-gray-900 mb-2">
+						Гайды скоро появятся
+					</h3>
+					<p class="text-gray-600">
+						Мы готовим подробные руководства по работе с
+						маркетплейсами
+					</p>
+				</div>
+			)
+		}
+	</section>
+
+	<!-- CTA Section -->
+	<section class="default-container pb-16">
+		<div
+			class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-8 md:p-12 text-center text-white"
+		>
+			<h2 class="text-2xl md:text-3xl font-bold mb-4">
+				Нужен индивидуальный гайд?
+			</h2>
+			<p
+				class="text-green-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed"
+			>
+				Расскажите о вашей задаче, и мы подготовим персонализированное
+				руководство по теме
+			</p>
+			<a
+				href="https://t.me/sellyzer_support"
+				target="_blank"
+				class="bg-white text-green-600 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-base inline-flex items-center gap-2"
+			>
+				<svg
+					stroke="currentColor"
+					fill="currentColor"
+					stroke-width="0"
+					viewBox="0 0 496 512"
+					height="18"
+					width="18"
+					xmlns="http://www.w3.org/2000/svg"
+					><path
+						d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"
+					></path></svg
+				>
+				Написать в Telegram
+			</a>
+		</div>
+	</section>
+</BasePageLayout>

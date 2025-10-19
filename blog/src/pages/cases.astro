@@ -1,0 +1,207 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+import BasePageLayout from "../layouts/BasePageLayout.astro";
+
+const allPosts = await getCollection("blog");
+const casePosts = allPosts
+	.filter(
+		(post) =>
+			post.data.tags?.includes("case-study") ||
+			post.data.category === "cases"
+	)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BasePageLayout
+	title="Кейсы успеха на маркетплейсах"
+	description="Реальные примеры увеличения продаж, успешные стратегии и практический опыт продавцов на Ozon, Wildberries и других платформах"
+>
+	<!-- Featured Case -->
+	{
+		casePosts.length > 0 && (
+			<section class="default-container mb-16">
+				<a href={`/blog/${casePosts[0].id}/`} class="group">
+					<div class="bg-gradient-to-br from-purple-50 to-white border border-purple-100 rounded-2xl p-8 md:p-12">
+						<div class="grid lg:grid-cols-2 gap-8 items-center">
+							<div class="order-2 lg:order-1">
+								<span class="inline-block bg-purple-100 text-purple-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+									Кейс месяца
+								</span>
+								<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-purple-600 transition-base">
+									{casePosts[0].data.title}
+								</h2>
+								<p class="text-gray-600 text-lg mb-6 leading-relaxed">
+									{casePosts[0].data.description}
+								</p>
+								<div class="flex items-center gap-4 text-sm text-gray-500">
+									<FormattedDate
+										date={casePosts[0].data.pubDate}
+									/>
+									<span>•</span>
+									<span>Изучить кейс →</span>
+								</div>
+							</div>
+							<div class="order-1 lg:order-2">
+								{casePosts[0].data.heroImage && (
+									<div class="relative overflow-hidden rounded-xl aspect-video">
+										<Image
+											width={600}
+											height={400}
+											src={casePosts[0].data.heroImage}
+											alt={casePosts[0].data.title}
+											class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+										/>
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+				</a>
+			</section>
+		)
+	}
+
+	<!-- Cases Grid -->
+	<section class="default-container pb-16 md:pb-24">
+		<div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+			{
+				casePosts.slice(1).map((post) => (
+					<a
+						href={`/blog/${post.id}/`}
+						class="block bg-white border border-purple-100 rounded-2xl p-6 hover:border-purple-300 transition-base group"
+					>
+						{post.data.heroImage && (
+							<div class="relative overflow-hidden rounded-lg aspect-video mb-4">
+								<Image
+									width={400}
+									height={250}
+									src={post.data.heroImage}
+									alt={post.data.title}
+									class="w-full min-h-full block object-cover group-hover:scale-105 transition-transform duration-300"
+								/>
+							</div>
+						)}
+						<div class="flex items-center gap-2 text-sm text-purple-600 mb-3">
+							<svg
+								class="w-4 h-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+								/>
+							</svg>
+							<span>Кейс</span>
+						</div>
+						<h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-purple-600 transition-base line-clamp-2">
+							{post.data.title}
+						</h3>
+						<p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+							{post.data.description}
+						</p>
+						<div class="flex items-center justify-between mt-4">
+							<div class="flex items-center gap-2 text-sm text-gray-500">
+								<FormattedDate date={post.data.pubDate} />
+							</div>
+							<div class="flex items-center gap-2 text-sm text-purple-600 font-medium">
+								<span>Читать</span>
+								<svg
+									class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M14 5l7 7m0 0l-7 7m7-7H3"
+									/>
+								</svg>
+							</div>
+						</div>
+					</a>
+				))
+			}
+		</div>
+
+		{
+			casePosts.length === 0 && (
+				<div class="text-center py-16 max-w-lg mx-auto">
+					<svg
+						class="w-16 h-16 text-gray-300 mx-auto mb-4"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="1"
+							d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+						/>
+					</svg>
+					<h3 class="text-xl font-semibold text-gray-900 mb-2">
+						Кейсы скоро появятся
+					</h3>
+					<p class="text-gray-600">
+						Мы собираем реальные примеры успеха наших пользователей
+					</p>
+				</div>
+			)
+		}
+	</section>
+
+	<!-- Results Section -->
+	<section class="default-container pb-16">
+		<div class="grid md:grid-cols-3 gap-8 text-center">
+			<div class="bg-white border border-gray-200 rounded-2xl p-6">
+				<div class="text-3xl font-bold text-purple-600 mb-2">+137%</div>
+				<div class="text-gray-600 text-sm">
+					средний рост продаж товаров в кейсах
+				</div>
+			</div>
+			<div class="bg-white border border-gray-200 rounded-2xl p-6">
+				<div class="text-3xl font-bold text-purple-600 mb-2">2.4x</div>
+				<div class="text-gray-600 text-sm">
+					увеличение ROI после оптимизации
+				</div>
+			</div>
+			<div class="bg-white border border-gray-200 rounded-2xl p-6">
+				<div class="text-3xl font-bold text-purple-600 mb-2">89%</div>
+				<div class="text-gray-600 text-sm">
+					клиентов повторяют успешные стратегии
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section class="default-container pb-16">
+		<div
+			class="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-8 md:p-12 text-center text-white"
+		>
+			<h2 class="text-2xl md:text-3xl font-bold mb-4">
+				Хотите стать следующим кейсом?
+			</h2>
+			<p
+				class="text-purple-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed"
+			>
+				Начните использовать Sellyzer и попадите в подборку!
+			</p>
+			<a
+				href="https://sellyzer.ru"
+				target="_blank"
+				class="bg-white text-purple-600 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-base inline-flex items-center gap-2"
+			>
+				Начать бесплатно
+			</a>
+		</div>
+	</section>
+</BasePageLayout>

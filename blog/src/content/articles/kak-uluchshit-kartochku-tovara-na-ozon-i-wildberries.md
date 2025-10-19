@@ -3,6 +3,7 @@ title: "Как улучшить карточку товара на Ozon и Wildb
 description: "Разбираем, как оформить карточку товара на маркетплейсах Ozon и Wildberries, чтобы поднять продажи, CTR и позиции в выдаче."
 pubDate: "Oct 10 2025"
 heroImage: "../../assets/kak-uluchshit-kartochku-tovara-na-ozon-i-wildberries.jpg"
+category: "guides"
 ---
 
 Карточка товара — это витрина вашего бизнеса на маркетплейсе.  
