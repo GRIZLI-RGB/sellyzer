@@ -1,60 +1,47 @@
-body,
-button,
-input,
-textarea {
-	font-family: var(--font-sans);
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-rendering: optimizeLegibility;
-	font-kerning: normal;
-	font-feature-settings: "liga" 1, "kern" 1;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
 	line-height: 1.15;
 	font-family: var(--font-sans);
 	text-rendering: optimizeLegibility;
 }
 
-h1 {
+article h1 {
 	font-size: clamp(28px, 5.5vw, 48px);
 	font-weight: 700;
 	letter-spacing: -0.02em;
 }
 
-h2 {
+article h2 {
 	font-size: clamp(22px, 4.2vw, 36px);
 	font-weight: 600;
 }
 
-h3 {
+article h3 {
 	font-size: clamp(18px, 3.2vw, 28px);
 	font-weight: 600;
 }
 
-h4 {
+article h4 {
 	font-size: 1.563em;
 	font-weight: 600;
 }
 
-h5 {
+article h5 {
 	font-size: 1.25em;
 	font-weight: 500;
 }
 
-h6 {
+article h6 {
 	font-weight: 500;
 }
 
-strong,
-b {
+article strong,
+article b {
 	font-weight: 700;
 }
 
@@ -69,33 +56,19 @@ article a:focus {
 	text-decoration: underline;
 }
 
-.lead {
+article .lead {
 	font-size: clamp(1.05rem, 1rem + 0.6vw, 1.25rem);
 	color: rgba(var(--gray-dark), 0.95);
 	margin-bottom: 1.25rem;
 	line-height: 1.7;
 }
 
-p {
+article p {
 	margin-bottom: 1em;
 }
 
-.prose p {
+article .prose p {
 	margin-bottom: 2em;
-}
-
-textarea {
-	width: 100%;
-	font-size: inherit;
-}
-
-input {
-	font-size: inherit;
-}
-
-table {
-	width: 100%;
-	border-collapse: collapse;
 }
 
 article img {
@@ -107,7 +80,7 @@ article img {
 	object-fit: cover;
 }
 
-code {
+article code {
 	font-family: var(--font-mono);
 	font-size: 0.95em;
 	padding: 2px 6px;
@@ -115,14 +88,14 @@ code {
 	border-radius: 6px;
 }
 
-pre {
+article pre {
 	padding: 1.5em;
 	border-radius: 8px;
 	background-color: rgb(var(--gray-light));
 	overflow: auto;
 }
 
-pre > code {
+article pre > code {
 	all: unset;
 	display: block;
 	font-family: var(--font-mono);
@@ -130,7 +103,7 @@ pre > code {
 	line-height: 1.45;
 }
 
-blockquote {
+article blockquote {
 	border-left: 4px solid var(--accent);
 	padding: 0 0 0 20px;
 	margin: 0;
@@ -138,7 +111,7 @@ blockquote {
 	color: rgba(var(--gray-dark), 0.95);
 }
 
-hr {
+article hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-light));
 	margin: 2rem 0;
@@ -148,4 +121,26 @@ article ul,
 article ol {
 	list-style: unset;
 	margin: 1.5rem 2rem;
+}
+
+/* Добавьте в _typography.css */
+.line-clamp-2 {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.line-clamp-3 {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.line-clamp-4 {
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
 }

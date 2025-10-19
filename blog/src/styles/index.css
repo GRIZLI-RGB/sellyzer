@@ -14,13 +14,9 @@
 :root {
 	--accent: #2337ff;
 	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow: 0 2px 6px rgba(var(--gray), 25%),
-		0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%);
 	--font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
 		"Helvetica Neue", Arial;
 	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
@@ -34,6 +30,18 @@ body {
 	scroll-behavior: smooth;
 }
 
+body,
+button,
+input,
+textarea {
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	font-kerning: normal;
+	font-feature-settings: "liga" 1, "kern" 1;
+}
+
 body {
 	color: #1f2937;
 	text-align: left;
@@ -45,6 +53,20 @@ body {
 	line-height: 1.6;
 	display: flex;
 	flex-direction: column;
+}
+
+textarea {
+	width: 100%;
+	font-size: inherit;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+input {
+	font-size: inherit;
 }
 
 main {

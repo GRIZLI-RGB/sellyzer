@@ -16,102 +16,134 @@ const posts = (await getCollection("blog")).sort(
 <html lang="ru">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
 	</head>
 	<body>
 		<Header />
-		<main>
-			<!-- <section>
-				<ul>
+		<main class="bg-white py-8">
+			{
+				posts.length > 0 && (
+					<section class="default-container mb-8">
+						<a href={`/blog/${posts[0].id}/`} class="group">
+							<div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-8 md:p-12">
+								<div class="grid lg:grid-cols-2 gap-8 items-center">
+									<div class="order-2 lg:order-1">
+										<span class="inline-block bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+											Новая статья
+										</span>
+										<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-base">
+											{posts[0].data.title}
+										</h2>
+										<p class="text-gray-600 text-lg mb-6 leading-relaxed">
+											{posts[0].data.description}
+										</p>
+										<div class="flex items-center gap-4 text-sm text-gray-500">
+											<FormattedDate
+												date={posts[0].data.pubDate}
+											/>
+											<span>•</span>
+											<span>Читать статью →</span>
+										</div>
+									</div>
+									<div class="order-1 lg:order-2">
+										{posts[0].data.heroImage && (
+											<div class="relative overflow-hidden rounded-xl aspect-video">
+												<Image
+													width={600}
+													height={400}
+													src={
+														posts[0].data.heroImage
+													}
+													alt={posts[0].data.title}
+													class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+												/>
+											</div>
+										)}
+									</div>
+								</div>
+							</div>
+						</a>
+					</section>
+				)
+			}
+
+			<section class="default-container pb-16 md:pb-24">
+				<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
+						posts.slice(1).map((post) => (
+							<article class="bg-white border border-gray-200 rounded-2xl p-6 hover:border-gray-300 transition-base group underline-none">
+								<a href={`/blog/${post.id}/`} class="block">
 									{post.data.heroImage && (
-										<Image
-											width={720}
-											height={360}
-											src={post.data.heroImage}
-											alt=""
-										/>
+										<div class="relative overflow-hidden rounded-lg aspect-video mb-4">
+											<Image
+												width={400}
+												height={250}
+												src={post.data.heroImage}
+												alt={post.data.title}
+												class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+											/>
+										</div>
 									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
+									<div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
 										<FormattedDate
 											date={post.data.pubDate}
 										/>
+									</div>
+									<h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-base line-clamp-2">
+										{post.data.title}
+									</h3>
+									<p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+										{post.data.description}
 									</p>
+									<div class="flex items-center gap-2 text-sm text-blue-600 mt-4 font-medium">
+										<span>Читать</span>
+										<svg
+											class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M14 5l7 7m0 0l-7 7m7-7H3"
+											/>
+										</svg>
+									</div>
 								</a>
-							</li>
+							</article>
 						))
 					}
-				</ul>
-			</section> -->
+				</div>
+
+				{/* Empty State */}
+				{
+					posts.length === 0 && (
+						<div class="text-center py-16">
+							<svg
+								class="w-16 h-16 text-gray-300 mx-auto mb-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="1"
+									d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+								/>
+							</svg>
+							<h3 class="text-xl font-semibold text-gray-900 mb-2">
+								Статьи скоро появятся
+							</h3>
+							<p class="text-gray-600">
+								Мы готовим для вас полезные материалы по
+								маркетплейсам.
+							</p>
+						</div>
+					)
+				}
+			</section>
 		</main>
 		<Footer />
 	</body>
