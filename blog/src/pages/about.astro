@@ -1,63 +1,388 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import BasePageLayout from "../layouts/BasePageLayout.astro";
 ---
 
-<Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
+<BasePageLayout
+	title="О проекте Sellyzer"
+	description="Помогаем продавцам маркетплейсов принимать умные решения на основе данных и увеличивать продажи с помощью AI-аналитики"
 >
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
-	</p>
+	<!-- Hero Problem Section -->
+	<section class="default-container py-16 md:py-24">
+		<div class="max-w-4xl mx-auto text-center">
+			<h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+				Продавать на маркетплейсах<br /><span class="text-blue-600"
+					>стало сложно?</span
+				>
+			</h1>
+			<p class="text-xl text-gray-600 mb-8 leading-relaxed">
+				Конкуренция растет, алгоритмы меняются, а цены падают. Sellyzer
+				помогает сосредоточиться на росте, а не на рутинном анализе
+				данных.
+			</p>
+		</div>
+	</section>
 
-	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
-	</p>
+	<!-- Problem/Solution Grid -->
+	<section class="default-container pb-16 md:pb-24">
+		<div class="max-w-6xl mx-auto">
+			<div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
+				<!-- Problems Column -->
+				<div class="space-y-8">
+					<div class="text-center lg:text-left">
+						<h2 class="text-3xl font-bold text-gray-900 mb-4">
+							Вы сталкиваетесь с этим?
+						</h2>
+						<p class="text-gray-600">
+							Типичные проблемы, которые мешают продавцам расти
+						</p>
+					</div>
 
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
+					<div class="space-y-6">
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-base"
+						>
+							<div
+								class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1"
+							>
+								<svg
+									width="18px"
+									height="18px"
+									viewBox="0 -52 1128 1128"
+									fill="#e7000b"
+									class="icon"
+									version="1.1"
+									xmlns="http://www.w3.org/2000/svg"
+									><g id="SVGRepo_bgCarrier" stroke-width="0"
+									></g><g
+										id="SVGRepo_tracerCarrier"
+										stroke-linecap="round"
+										stroke-linejoin="round"></g><g
+										id="SVGRepo_iconCarrier"
+										><path
+											d="M1103.834104 757.260169L910.925506 423.059499 718.016909 88.858829C686.001595 33.158717 628.341362 0 564.147392 0c-64.357314 0-121.854203 33.158717-154.03286 88.858829L24.133993 757.260169c-32.178657 55.700112-32.178657 122.18089 0 177.881002s89.675546 88.858829 154.03286 88.858829h771.797735c64.357314 0 121.854203-33.158717 154.03286-88.858829s32.015313-122.18089-0.163344-177.881002z m-84.775243 128.714628a78.780539 78.780539 0 0 1-69.094273 39.855798H178.166853c-28.911788 0-54.720051-14.864253-69.094274-39.855798a79.368576 79.368576 0 0 1 0-79.874941L494.889775 137.86186A79.221566 79.221566 0 0 1 564.147392 98.006062c28.911788 0 54.720051 14.864253 69.094273 39.855798l385.817196 668.40134a79.058223 79.058223 0 0 1 0 79.711597zM567.087574 623.155208c27.11501 0 49.003031-21.88802 49.003031-49.003031V275.397033c0-27.11501-21.88802-49.003031-49.003031-49.003031s-49.003031 21.88802-49.003031 49.003031v298.755144c0 26.951667 21.88802 49.003031 49.003031 49.003031zM567.087574 690.126017c-43.449354 0-78.731536 35.282182-78.731536 78.731536s35.282182 78.731536 78.731536 78.731536 78.731536-35.282182 78.731536-78.731536-35.282182-78.731536-78.731536-78.731536z m0 98.006061c-10.617323 0-19.274525-8.657202-19.274526-19.274525 0-10.617323 8.657202-19.274525 19.274526-19.274525s19.274525 8.657202 19.274525 19.274525c0 10.617323-8.657202 19.274525-19.274525 19.274525z"
+										></path></g
+									></svg
+								>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									Не понимаете, почему падают продажи
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									Аналитика разрознена между разными
+									платформами, нет единой картины
+									происходящего
+								</p>
+							</div>
+						</div>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-base"
+						>
+							<div
+								class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1"
+							>
+								<svg
+									width="20px"
+									height="20px"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+									stroke="#e7000b"
+									><g id="SVGRepo_bgCarrier" stroke-width="0"
+									></g><g
+										id="SVGRepo_tracerCarrier"
+										stroke-linecap="round"
+										stroke-linejoin="round"></g><g
+										id="SVGRepo_iconCarrier"
+									>
+										<path
+											d="M18 8.5V8.35417C18 6.50171 16.4983 5 14.6458 5H9.5C7.567 5 6 6.567 6 8.5C6 10.433 7.567 12 9.5 12H14.5C16.433 12 18 13.567 18 15.5C18 17.433 16.433 19 14.5 19H9.42708C7.53436 19 6 17.4656 6 15.5729V15.5M12 3V21"
+											stroke="#e7000b"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"></path>
+									</g></svg
+								>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									Теряете деньги на неэффективных товарах
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									Нет инструментов для быстрого анализа
+									рентабельности и выявления убыточных позиций
+								</p>
+							</div>
+						</div>
 
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
-</Layout>
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-base"
+						>
+							<div
+								class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1"
+							>
+								<svg
+									class="w-5 h-5 text-red-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+									></path>
+								</svg>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									Упускаете прибыльные ниши
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									Слишком сложно и долго анализировать рынок
+									вручную, чтобы найти незанятые сегменты
+								</p>
+							</div>
+						</div>
+
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-base"
+						>
+							<div
+								class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1"
+							>
+								<svg
+									class="w-5 h-5 text-red-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+									></path>
+								</svg>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									Тратите часы на рутину
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									Ежедневный мониторинг цен, анализ
+									конкурентов и обновление карточек отнимают
+									все время
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Solutions Column -->
+				<div class="space-y-8">
+					<div class="text-center lg:text-left">
+						<h2 class="text-3xl font-bold text-gray-900 mb-4">
+							Sellyzer решает всё
+						</h2>
+						<p class="text-gray-600">
+							AI-инструменты экономят время и увеличивают прибыль
+						</p>
+					</div>
+
+					<div class="space-y-6">
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-blue-50 transition-base group"
+						>
+							<div
+								class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1 group-hover:bg-green-200 transition-base"
+							>
+								<svg
+									class="w-5 h-5 text-green-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+									></path>
+								</svg>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									AI-анализ карточек товаров
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									Автоматически находим слабые места в
+									описаниях, заголовках и изображениях, даем
+									конкретные рекомендации по улучшению
+								</p>
+							</div>
+						</div>
+
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-blue-50 transition-base group"
+						>
+							<div
+								class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1 group-hover:bg-green-200 transition-base"
+							>
+								<svg
+									class="w-5 h-5 text-green-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+									></path>
+								</svg>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									Умный мониторинг конкурентов
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									Следим за ценами, акциями и стратегиями
+									лидеров категории. Вы узнаете об изменениях
+									первыми
+								</p>
+							</div>
+						</div>
+
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-blue-50 transition-base group"
+						>
+							<div
+								class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1 group-hover:bg-green-200 transition-base"
+							>
+								<svg
+									class="w-5 h-5 text-green-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+									></path>
+								</svg>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									Поиск прибыльных ниш
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									AI анализирует тысячи категорий и находит
+									незанятые сегменты с высоким потенциалом
+									продаж
+								</p>
+							</div>
+						</div>
+
+						<div
+							class="flex items-start gap-4 p-4 rounded-xl hover:bg-blue-50 transition-base group"
+						>
+							<div
+								class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1 group-hover:bg-green-200 transition-base"
+							>
+								<svg
+									class="w-5 h-5 text-green-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+									></path>
+								</svg>
+							</div>
+							<div>
+								<h3 class="font-semibold text-gray-900 mb-2">
+									Автоматизация рутины
+								</h3>
+								<p
+									class="text-gray-600 text-sm leading-relaxed"
+								>
+									Система самостоятельно собирает данные и
+									готовит отчеты. Вы получаете готовые
+									insights, а не сырые данные
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Simple CTA -->
+	<section class="default-container">
+		<div
+			class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 md:p-12 text-center text-white"
+		>
+			<h2 class="text-3xl font-bold mb-4">
+				Хватит терять время и деньги
+			</h2>
+			<p
+				class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed"
+			>
+				Присоединяйтесь к продавцам, которые уже экономят время и
+				увеличивают прибыль с Sellyzer
+			</p>
+			<div class="flex flex-col sm:flex-row gap-4 justify-center">
+				<a
+					href="https://sellyzer.ru"
+					target="_blank"
+					class="bg-white text-blue-600 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-base inline-flex items-center justify-center gap-2"
+				>
+					<span>Попробовать бесплатно</span>
+					<svg
+						class="w-5 h-5"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+					</svg>
+				</a>
+				<a
+					href="/blog/guides"
+					class="border border-white text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-white hover:text-blue-600 transition-base inline-flex items-center justify-center gap-2"
+				>
+					<span>Читать гайды</span>
+				</a>
+			</div>
+		</div>
+	</section>
+</BasePageLayout>
