@@ -1,11 +1,13 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
+
 import BasePageLayout from "./BasePageLayout.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+type Props = CollectionEntry<"blog">["data"] & { readingTime?: number };
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, heroImage, tags, category, readingTime } =
+	Astro.props;
 ---
 
 <BasePageLayout title={title} description={description}>
@@ -42,7 +44,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<header class="text-center mb-12">
 					<div class="flex items-center justify-center">
 						<div
-							class="px-4 py-2 bg-gray-100 rounded-full inline-flex items-center justify-center gap-6 text-sm text-gray-500 mb-6 flex-wrap"
+							class="px-4 py-2 bg-gray-100 rounded-full inline-flex items-center justify-center gap-3 text-sm text-gray-500 mb-6 flex-wrap"
 						>
 							<div class="flex items-center gap-2">
 								<svg
@@ -68,7 +70,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 									}
 								</time>
 							</div>
-							<span class="text-gray-400">|</span>
+							<!-- <span class="text-gray-400">|</span>
 							<div class="flex items-center gap-2">
 								<svg
 									class="w-4 h-4"
@@ -90,7 +92,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 									></path>
 								</svg>
 								<span>1.2K просмотров</span>
-							</div>
+							</div> -->
 							<span class="text-gray-400">|</span>
 							<div class="flex items-center gap-2">
 								<svg
@@ -106,7 +108,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 										d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 									></path>
 								</svg>
-								<span>5 мин чтения</span>
+								<span>{readingTime} мин. на чтение</span>
 							</div>
 						</div>
 					</div>
@@ -141,26 +143,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<!-- Improved Article Footer -->
 				<footer class="border-t border-gray-200 mt-12 pt-8">
 					<div class="flex flex-col">
-						<div
-							class="flex flex-wrap gap-2 justify-start items-center"
-						>
-							<span class="text-sm">Теги:</span>
-							<span
-								class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium"
-							>
-								Маркетплейсы
-							</span>
-							<span
-								class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium"
-							>
-								Аналитика
-							</span>
-							<span
-								class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium"
-							>
-								Продажи
-							</span>
-						</div>
+						{
+							tags && (
+								<div class="flex flex-wrap gap-2 justify-start items-center">
+									<span class="text-sm">Теги:</span>
+
+									{tags.map((tag) => (
+										<span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+											{tag}
+										</span>
+									))}
+								</div>
+							)
+						}
 						<div
 							class="flex items-center justify-start gap-2 text-sm"
 						>
@@ -188,31 +183,63 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				Нашли это полезным?
 			</h2>
 			<p class="text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-				У нас есть еще много гайдов и кейсов по увеличению продаж на
-				маркетплейсах
+				{
+					category === "guides"
+						? "У нас есть ещё много полезных гайдов для продаж на маркетплейсах!"
+						: "У нас есть ещё много интересных кейсов по продажам на маркетплейсах!"
+				}
 			</p>
 			<div class="flex flex-col sm:flex-row gap-4 justify-center">
-				<a
-					title="Все гайды по маркетплейсам"
-					aria-label="Перейти ко всем руководствам"
-					href="/blog/guides"
-					class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-base inline-flex items-center justify-center gap-2"
-				>
-					<svg
-						class="w-5 h-5"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-						></path>
-					</svg>
-					Все гайды
-				</a>
+				{
+					category === "guides" && (
+						<a
+							title="Все гайды по маркетплейсам"
+							aria-label="Перейти ко всем руководствам"
+							href="/blog/guides"
+							class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-base inline-flex items-center justify-center gap-2"
+						>
+							<svg
+								class="w-5 h-5"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+								/>
+							</svg>
+							Все гайды
+						</a>
+					)
+				}
+				{
+					category === "cases" && (
+						<a
+							title="Все гайды по маркетплейсам"
+							aria-label="Перейти ко всем руководствам"
+							href="/blog/guides"
+							class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-base inline-flex items-center justify-center gap-2"
+						>
+							<svg
+								class="w-5 h-5 flex-shrink-0"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+								/>
+							</svg>
+							Все кейсы
+						</a>
+					)
+				}
 				<a
 					href="https://sellyzer.ru"
 					target="_blank"
