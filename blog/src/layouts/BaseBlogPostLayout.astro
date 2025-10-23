@@ -23,6 +23,7 @@ const { title, description, pubDate, heroImage, tags, category, readingTime } =
 						itemtype="https://schema.org/ImageObject"
 					>
 						<Image
+							quality={100}
 							width={1200}
 							height={600}
 							src={heroImage}
@@ -174,79 +175,96 @@ const { title, description, pubDate, heroImage, tags, category, readingTime } =
 		</div>
 	</article>
 
-	<!-- Related Articles CTA with proper spacing -->
 	<section class="default-container pb-16 md:pb-24 mt-16">
 		<div
-			class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-8 md:p-12 text-center"
+			class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl px-8 md:px-12 py-12 md:py-16 text-center"
 		>
-			<h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-				Нашли это полезным?
-			</h2>
-			<p class="text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-				{
-					category === "guides"
-						? "У нас есть ещё много полезных гайдов для продаж на маркетплейсах!"
-						: "У нас есть ещё много интересных кейсов по продажам на маркетплейсах!"
-				}
-			</p>
-			<div class="flex flex-col sm:flex-row gap-4 justify-center">
-				{
-					category === "guides" && (
-						<a
-							title="Все гайды по маркетплейсам"
-							aria-label="Перейти ко всем руководствам"
-							href="/blog/guides"
-							class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-base inline-flex items-center justify-center gap-2"
-						>
-							<svg
-								class="w-5 h-5"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-								/>
-							</svg>
-							Все гайды
-						</a>
-					)
-				}
-				{
-					category === "cases" && (
-						<a
-							title="Все гайды по маркетплейсам"
-							aria-label="Перейти ко всем руководствам"
-							href="/blog/guides"
-							class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-base inline-flex items-center justify-center gap-2"
-						>
-							<svg
-								class="w-5 h-5 flex-shrink-0"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-								/>
-							</svg>
-							Все кейсы
-						</a>
-					)
-				}
-				<a
-					href="https://sellyzer.ru"
-					target="_blank"
-					class="border border-blue-600 text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 hover:text-white transition-base inline-flex items-center justify-center gap-2"
+			<div class="max-w-2xl mx-auto">
+				<h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+					Готовы применить знания на практике?
+				</h2>
+
+				<p class="text-gray-600 mb-8 leading-relaxed text-lg">
+					{
+						category === "guides"
+							? "В этом гайде мы разобрали только основы! Изучите все руководства, чтобы стать настоящим экспертом в продажах на маркетплейсах."
+							: "Это лишь один из многих успешных кейсов! Изучите другие примеры, чтобы найти стратегии для вашего бизнеса."
+					}
+				</p>
+
+				<div
+					class="flex flex-col sm:flex-row gap-4 justify-center items-stretch"
 				>
-					Попробовать Sellyzer
-				</a>
+					<!-- Основная кнопка - всегда видна -->
+					<a
+						href={category === "guides"
+							? "/blog/guides"
+							: "/blog/cases"}
+						class="flex-1 bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 inline-flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
+					>
+						{
+							category === "guides" && (
+								<svg
+									class="w-5 h-5 relative -top-px"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+									/>
+								</svg>
+							)
+						}
+						{
+							category === "cases" && (
+								<svg
+									class="w-5 h-5"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+									/>
+								</svg>
+							)
+						}
+						{
+							category === "guides"
+								? "Смотреть все гайды"
+								: "Смотреть все кейсы"
+						}
+					</a>
+
+					<!-- Вторичная кнопка -->
+					<a
+						href="https://sellyzer.ru"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="flex-1 border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300 inline-flex items-center justify-center gap-3"
+					>
+						<svg
+							class="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+						</svg>
+						Попробовать Sellyzer
+					</a>
+				</div>
 			</div>
 		</div>
 	</section>

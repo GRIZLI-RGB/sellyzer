@@ -33,7 +33,7 @@ export default function TermsOfService() {
 								<strong> Sellyzer</strong> (далее — «Сервис»,
 								«Мы») и пользователем (далее — «Пользователь»,
 								«Вы») в связи с использованием веб-сайта
-								sellyzer.com и связанных услуг.
+								sellyzer.ru и связанных услуг.
 							</p>
 							<p className="text-gray-700 mb-4">
 								1.2. Используя Сервис, Вы подтверждаете, что

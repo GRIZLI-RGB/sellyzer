@@ -53,7 +53,7 @@ export default function AuthPage() {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify(user),
 				}
-			).then(() => (window.location.href = "/dashboard"));
+			).then(() => (window.location.href = "/dashboard/products"));
 		};
 	}, []);
 

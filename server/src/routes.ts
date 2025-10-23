@@ -66,8 +66,8 @@ export default async function (app: FastifyInstance) {
 				})
 				.redirect(
 					process.env.MODE === "development"
-						? "http://localhost:3000/dashboard"
-						: "https://sellyzer.ru/dashboard"
+						? "http://localhost:3000/dashboard/products"
+						: "https://sellyzer.ru/dashboard/products"
 				);
 		} catch {}
 	});

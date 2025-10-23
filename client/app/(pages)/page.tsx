@@ -119,13 +119,13 @@ export default function LandingPage() {
 
 						<div className="flex items-center gap-5">
 							<Link
-								href="/auth"
+								href="/authorization"
 								className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
 							>
 								Вход
 							</Link>
 							<Link
-								href="/auth"
+								href="/authorization"
 								className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors"
 							>
 								Начать бесплатно
@@ -153,7 +153,7 @@ export default function LandingPage() {
 
 						<div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
 							<Link
-								href="/auth"
+								href="/authorization"
 								className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors w-full sm:w-auto text-center"
 							>
 								Попробовать бесплатно
@@ -637,7 +637,7 @@ export default function LandingPage() {
 									</li>
 									<li>
 										<a
-											href="/dashboard"
+											href="/dashboard/products"
 											className="hover:text-black transition-colors"
 										>
 											Личный кабинет
@@ -653,7 +653,7 @@ export default function LandingPage() {
 								<ul className="space-y-3 text-sm text-gray-600">
 									<li>
 										<a
-											href="https://blog.sellyzer.com"
+											href="https://blog.sellyzer.ru"
 											target="_blank"
 											rel="noreferrer"
 											className="hover:text-black transition-colors"
@@ -663,7 +663,7 @@ export default function LandingPage() {
 									</li>
 									<li>
 										<a
-											href="https://docs.sellyzer.com"
+											href="https://docs.sellyzer.ru"
 											target="_blank"
 											rel="noreferrer"
 											className="hover:text-black transition-colors"

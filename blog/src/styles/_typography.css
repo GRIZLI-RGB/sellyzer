@@ -56,12 +56,7 @@ article a {
 	text-decoration: none;
 	border-bottom: 1px solid transparent;
 	transition: all 0.2s ease;
-}
-
-article a:hover,
-article a:focus {
-	color: var(--accent-dark);
-	border-bottom-color: var(--accent-dark);
+	border-bottom-color: var(--accent);
 }
 
 article .lead {
@@ -136,6 +131,66 @@ article ul,
 article ol {
 	list-style: unset;
 	margin: 1.5rem 2rem;
+}
+
+article table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 2.5rem 0;
+	font-size: 0.95em;
+	line-height: 1.6;
+	background-color: white;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.085);
+}
+
+article th {
+	background-color: rgba(var(--gray-light), 0.5);
+	color: rgb(var(--gray-dark));
+	font-weight: 600;
+	text-align: left;
+	padding: 1.25rem 1.5rem;
+	border-bottom: 2px solid rgba(var(--gray-light), 0.8);
+	font-family: var(--font-sans);
+	font-size: 0.9em;
+	letter-spacing: 0.02em;
+}
+
+article td {
+	padding: 1.25rem 1.5rem;
+	border-bottom: 1px solid rgba(var(--gray-light), 0.4);
+	color: rgb(var(--gray-dark));
+}
+
+article tr:last-child td {
+	border-bottom: none;
+}
+
+article tr:hover {
+	background-color: rgba(59, 130, 246, 0.03);
+	transition: all 0.2s ease;
+}
+
+/* Чередование строк для лучшей читаемости */
+article tbody tr:nth-child(even) {
+	background-color: rgba(var(--gray-light), 0.1);
+}
+
+article tbody tr:nth-child(even):hover {
+	background-color: rgba(59, 130, 246, 0.05);
+}
+
+@media (max-width: 768px) {
+	article table {
+		font-size: 0.9em;
+		margin: 2rem 0;
+	}
+
+	article th,
+	article td {
+		padding: 1rem 1.25rem;
+	}
 }
 
 .line-clamp-2 {

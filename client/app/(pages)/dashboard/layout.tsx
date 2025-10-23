@@ -146,7 +146,7 @@ export default function DashboardLayout({
 
 					<div className="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-100 mt-6 items-start">
 						<a
-							href="https://blog.sellyzer.com"
+							href="https://blog.sellyzer.ru"
 							target="_blank"
 							rel="noreferrer"
 							className="hover:underline"
@@ -154,7 +154,7 @@ export default function DashboardLayout({
 							Блог
 						</a>
 						<a
-							href="https://docs.sellyzer.com"
+							href="https://docs.sellyzer.ru"
 							target="_blank"
 							rel="noreferrer"
 							className="hover:underline"
