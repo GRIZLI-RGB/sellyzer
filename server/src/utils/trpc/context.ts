@@ -7,6 +7,7 @@ export function createContext({ req, res }: CreateFastifyContextOptions) {
 	let user = null;
 
 	const token = req.cookies?.token;
+	
 	if (token) {
 		try {
 			const payload = jwt.verify(token, process.env.JWT_SECRET!);

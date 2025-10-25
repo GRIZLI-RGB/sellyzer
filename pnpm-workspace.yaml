@@ -1,4 +1,5 @@
 packages:
-  - "client"
-  - "server"
-  - "blog"
+    - "client"
+    - "server"
+    - "blog"
+    - "shared"

@@ -1,41 +1,43 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "prod": "next build && next start"
-  },
-  "dependencies": {
-    "@heroui/react": "^2.8.1",
-    "@tanstack/react-query": "^5.84.1",
-    "@trpc/client": "^11.4.4",
-    "@trpc/react-query": "^11.4.3",
-    "@trpc/server": "^11.4.4",
-    "@trpc/tanstack-react-query": "^11.4.4",
-    "client-only": "^0.0.1",
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.23.9",
-    "lucide-react": "^0.526.0",
-    "next": "15.3.5",
-    "next-themes": "^0.4.6",
-    "react": "^19.0.0",
-    "react-compare-image": "^3.5.10",
-    "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0",
-    "react-responsive-modal": "^7.0.0",
-    "server-only": "^0.0.1",
-    "zod": "^4.0.14"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.5",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  }
+	"name": "client",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"prod": "next build && next start"
+	},
+	"dependencies": {
+		"@heroui/react": "^2.8.1",
+		"@tanstack/react-query": "^5.84.1",
+		"@trpc/client": "^11.4.4",
+		"@trpc/react-query": "^11.4.3",
+		"@trpc/server": "^11.4.4",
+		"@trpc/tanstack-react-query": "^11.4.4",
+		"client-only": "^0.0.1",
+		"clsx": "^2.1.1",
+		"framer-motion": "^12.23.9",
+		"lucide-react": "^0.526.0",
+		"next": "15.3.5",
+		"next-themes": "^0.4.6",
+		"react": "^19.0.0",
+		"react-compare-image": "^3.5.10",
+		"react-dom": "^19.0.0",
+		"react-icons": "^5.5.0",
+		"react-responsive-modal": "^7.0.0",
+		"server-only": "^0.0.1",
+		"zod": "^4.0.14",
+		"zustand": "^5.0.8"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3",
+		"@tailwindcss/postcss": "^4",
+		"@types/node": "^20",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"eslint": "^9",
+		"eslint-config-next": "15.3.5",
+		"tailwindcss": "^4",
+		"typescript": "^5",
+		"@sellyzer/shared": "workspace:*"
+	}
 }

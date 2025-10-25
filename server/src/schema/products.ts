@@ -1,7 +1,6 @@
 import {
 	integer,
 	numeric,
-	pgEnum,
 	pgTable,
 	serial,
 	text,
@@ -12,14 +11,11 @@ import { sql } from "drizzle-orm";
 
 import { users } from "./users";
 
-export const marketplaceEnum = [
-	"OZON",
-	"WILDBERRIES",
-	"AVITO",
-	"YANDEX_MARKET",
-] as const;
-
-export const marketplace = pgEnum("marketplace", marketplaceEnum);
+export type ProductMarketplaceType =
+	| "OZON"
+	| "WILDBERRIES"
+	| "AVITO"
+	| "YANDEX_MARKET";
 
 export const products = pgTable("products", {
 	id: serial().primaryKey(),
@@ -27,7 +23,7 @@ export const products = pgTable("products", {
 	article: varchar("article", { length: 128 }).notNull(),
 	url: text("url").notNull(),
 	price: integer("price").notNull(),
-	marketplace: marketplace("marketplace").notNull(),
+	marketplace: text("marketplace").$type<ProductMarketplaceType>().notNull(),
 	images: text("images")
 		.array()
 		.$type<string[]>()

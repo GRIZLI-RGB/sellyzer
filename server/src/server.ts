@@ -10,6 +10,7 @@ import {
 
 import { appRouter, type AppRouter } from "./utils/trpc/router";
 import { createContext } from "./utils/trpc/context";
+import { seedSettings } from "./seeds/settings.seed";
 
 const fastify: FastifyInstance = Fastify({
 	bodyLimit: 1024 * 1024 * 5,
@@ -62,6 +63,8 @@ const startBackend = async () => {
 	await fastify.register(import("./routes"), { prefix: "/api" });
 
 	try {
+		await seedSettings();
+
 		await fastify.listen({ port: 8000 });
 	} catch (err) {
 		fastify.log.error(err);

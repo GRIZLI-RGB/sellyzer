@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { marketplaceEnum } from "./../../schema/products";
+import { ProductMarketplaceType } from "./../../schema/products";
 
 export const createProductInput = z
 	.object({
-		marketplace: z.enum(marketplaceEnum),
+		marketplace: z.custom<ProductMarketplaceType>(),
 		article: z.string().optional(),
 		url: z.url().optional(),
 	})

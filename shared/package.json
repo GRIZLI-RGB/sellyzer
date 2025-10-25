@@ -1,0 +1,12 @@
+{
+	"name": "@sellyzer/shared",
+	"version": "1.0.0",
+	"main": "index.ts",
+	"types": "index.ts",
+	"devDependencies": {
+		"@trpc/server": "^11.4.4"
+	},
+	"dependencies": {
+		"zod": "^4.0.17"
+	}
+}

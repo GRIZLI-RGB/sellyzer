@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
 import {
@@ -8,13 +8,24 @@ import {
 	Boxes as BoxesIcon,
 	LineChartIcon,
 	Megaphone,
+	Store,
 } from "lucide-react";
 import Image from "next/image";
 import { FaTelegram } from "react-icons/fa";
 import Modal from "@/app/components/shared/modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUser } from "@/app/store/useUser";
+import { trpc } from "@/app/utils/trpc";
+import Loader from "@/app/components/shared/loader";
+import { plural } from "@/app/utils/functions";
 
 const navItems = [
+	{
+		title: "Магазины",
+		icon: <Store className="w-5 h-5" />,
+		href: "/dashboard/shops",
+		pro: true,
+	},
 	{
 		title: "Товары",
 		icon: <BoxesIcon className="w-5 h-5" />,
@@ -44,7 +55,36 @@ export default function DashboardLayout({
 }: {
 	children: React.ReactNode;
 }) {
+	const router = useRouter();
 	const pathname = usePathname();
+
+	const { user, setUser, clearUser } = useUser();
+
+	const {
+		data: userData,
+		isLoading: userIsLoading,
+		isError: userIsError,
+	} = trpc.getCurrentUser.useQuery(undefined, {
+		enabled: !user,
+		staleTime: 5 * 60 * 1000,
+		retry: false,
+	});
+	const { data: settingsData, isLoading: settingsIsLoading } =
+		trpc.getGlobalSettings.useQuery(undefined, {
+			staleTime: 1 * 60 * 1000,
+			retry: false,
+		});
+
+	useEffect(() => {
+		if (userData) setUser(userData);
+	}, [userData]);
+
+	useEffect(() => {
+		if (!userIsLoading && !userData && userIsError) {
+			clearUser();
+			router.push("/authorization");
+		}
+	}, [userIsLoading, userIsError, userData]);
 
 	const [proModalOpen, setProModalOpen] = useState(false);
 	const [selectedFeature, setSelectedFeature] = useState<string | undefined>(
@@ -55,6 +95,10 @@ export default function DashboardLayout({
 		setSelectedFeature(featureName);
 		setProModalOpen(true);
 	};
+
+	if (!user || !settingsData || userIsLoading || settingsIsLoading) {
+		return <Loader fullScreen text="Загружаем данные..." />;
+	}
 
 	return (
 		<>
@@ -119,11 +163,15 @@ export default function DashboardLayout({
 								<span className="font-bold">990₽/мес</span>
 							</h4>
 							<p className="text-xs text-yellow-800 dark:text-yellow-200 mb-2">
-								Безлимит товаров, аналитика и реклама, анализ
-								рынка конкурентов, расширенные уведомления в
-								Telegram — всё в одном тарифе.
+								Безлимит товаров, магазины, аналитика и реклама,
+								анализ конкурентов – всё включено.
 							</p>
-							<button className="transition-base block w-full text-center text-sm font-medium bg-yellow-400 hover:bg-yellow-500 text-black py-1.5 rounded-md">
+							<button
+								onClick={() =>
+									router.push("/dashboard/billing")
+								}
+								className="transition-base block w-full text-center text-sm font-medium bg-yellow-400 hover:bg-yellow-500 text-black py-1.5 rounded-md"
+							>
 								Перейти на PRO
 							</button>
 						</div>
@@ -131,7 +179,10 @@ export default function DashboardLayout({
 
 					<div className="mt-6 text-sm flex items-center justify-between">
 						<span className="text-gray-700 dark:text-gray-300">
-							Баланс: <span className="font-semibold">0₽</span>
+							Баланс:{" "}
+							<span className="font-semibold">
+								{user?.balance}₽
+							</span>
 						</span>
 						<a
 							href="/dashboard/billing"
@@ -141,12 +192,19 @@ export default function DashboardLayout({
 						</a>
 					</div>
 					<p className="text-xs text-gray-500 dark:text-gray-400">
-						Хватит на 3 дня
+						Хватит на{" "}
+						{Math.floor(user.balance / settingsData.proDailyRate)}{" "}
+						{plural(
+							Math.floor(
+								user.balance / settingsData.proDailyRate
+							),
+							["день", "дня", "дней"]
+						)}
 					</p>
 
 					<div className="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-100 mt-6 items-start">
 						<a
-							href="https://blog.sellyzer.ru"
+							href="https://sellyzer.ru/blog"
 							target="_blank"
 							rel="noreferrer"
 							className="hover:underline"
@@ -154,7 +212,7 @@ export default function DashboardLayout({
 							Блог
 						</a>
 						<a
-							href="https://docs.sellyzer.ru"
+							href="https://sellyzer.ru/docs"
 							target="_blank"
 							rel="noreferrer"
 							className="hover:underline"

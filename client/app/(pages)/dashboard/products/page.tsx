@@ -509,7 +509,7 @@ export default function DashboardProductsPage() {
 								</th>
 								<th className="font-semibold px-4 py-3 text-left">
 									Платформа
-								</th>{" "}
+								</th>
 								<th className="font-semibold px-4 py-3 text-left">
 									Конкуренты
 								</th>

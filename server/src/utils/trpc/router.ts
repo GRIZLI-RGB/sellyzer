@@ -1,12 +1,47 @@
 import { TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
 
 import { protectedProcedure, publicProcedure, router } from "./procedures";
 import { products } from "./../../schema/products";
 import { productReviews } from "./../../schema/productReviews";
 import { createProductInput } from "./inputs";
 import { parseOzonProduct } from "../helpers";
+import { users } from "./../../schema/users";
+import { settings } from "./../../schema/settings";
 
 export const appRouter = router({
+	getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+		const { user, db } = ctx;
+
+		const [currentUser] = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, user.id))
+			.limit(1);
+
+		if (!currentUser) {
+			throw new TRPCError({
+				code: "NOT_FOUND",
+				message: "Пользователь не найден",
+			});
+		}
+
+		return currentUser;
+	}),
+
+	getGlobalSettings: publicProcedure.query(async ({ ctx }) => {
+		const [settingsDb] = await ctx.db.select().from(settings).limit(1);
+
+		if (!settingsDb) {
+			throw new TRPCError({
+				code: "NOT_FOUND",
+				message: "Не удалось найти глобальные настройки",
+			});
+		}
+
+		return settingsDb;
+	}),
+
 	createProduct: protectedProcedure
 		.input(createProductInput)
 		.mutation(async ({ ctx, input }) => {

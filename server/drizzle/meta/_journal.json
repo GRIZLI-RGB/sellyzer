@@ -8,6 +8,13 @@
       "when": 1759348330525,
       "tag": "0000_thick_thunderbolt_ross",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1761420597906,
+      "tag": "0001_conscious_vector",
+      "breakpoints": true
     }
   ]
 }
