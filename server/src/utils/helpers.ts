@@ -25,7 +25,7 @@ export async function parseOzonProduct(article?: string, url?: string) {
 		await page.setRequestInterception(true);
 		page.on("request", (req) => {
 			const resourceType = req.resourceType();
-			const blockedResources = ["image", "stylesheet", "font"];
+			const blockedResources = ["stylesheet", "font"];
 			if (blockedResources.includes(resourceType)) {
 				req.abort();
 			} else {
@@ -85,7 +85,7 @@ export async function parseOzonProduct(article?: string, url?: string) {
 
 		// === rating и totalCountReviews ===
 		const ratingEl = await page.$(
-			"div[data-widget='webSingleProductScore'] div.ga5_3_7-a2"
+			"div[data-widget='webSingleProductScore'] a div"
 		);
 		let rating = 0;
 		let totalCountReviews = 0;
@@ -108,7 +108,7 @@ export async function parseOzonProduct(article?: string, url?: string) {
 		// === Артикул ===
 		let parsedArticle: string | null = null;
 		const articleEl = await page.$(
-			"button[data-widget='webDetailSKU'] div.ga5_3_7-a2"
+			"button[data-widget='webDetailSKU'] div"
 		);
 		if (articleEl) {
 			const articleText =
@@ -119,6 +119,59 @@ export async function parseOzonProduct(article?: string, url?: string) {
 			if (match) parsedArticle = match[1];
 		}
 
+		// === Изображения ===
+		let images: string[] = [];
+
+		try {
+			await page.waitForSelector("div[data-widget='webGallery']", {
+				timeout: 5000,
+			});
+
+			images = await page.$$eval(
+				"div[data-widget='webGallery'] img",
+				(imgs) => {
+					const firstImg = imgs[0];
+
+					const normalize = (url: string) => {
+						if (!url) return "";
+						if (url.includes("cover.jpg")) return "";
+						return url.replace(/wc\d+/g, "wc1000");
+					};
+
+					const rest = imgs
+						.slice(1)
+						.map((img) => {
+							const srcset = img.getAttribute("srcset");
+							if (srcset) {
+								const parts = srcset
+									.split(",")
+									.map((s) => s.trim());
+								const last = parts[parts.length - 1];
+								return normalize(last.split(" ")[0]);
+							}
+							return normalize(img.getAttribute("src") || "");
+						})
+						.filter((src) => src);
+
+					const firstSrc = (() => {
+						const srcset = firstImg.getAttribute("srcset");
+						if (srcset) {
+							const parts = srcset
+								.split(",")
+								.map((s) => s.trim());
+							const last = parts[parts.length - 1];
+							return normalize(last.split(" ")[0]);
+						}
+						return normalize(firstImg.getAttribute("src") || "");
+					})();
+
+					// Объединяем и фильтруем дубликаты
+					const all = firstSrc ? [firstSrc, ...rest] : rest;
+					return Array.from(new Set(all));
+				}
+			);
+		} catch {}
+
 		return {
 			title,
 			price,
@@ -126,6 +179,7 @@ export async function parseOzonProduct(article?: string, url?: string) {
 			rating,
 			totalCountReviews,
 			article: parsedArticle || "unknown",
+			images,
 		};
 	} finally {
 		if (browser) await browser.close();

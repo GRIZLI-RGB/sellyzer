@@ -8,14 +8,9 @@ import {
 	varchar,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { ProductMarketplaceType } from "@sellyzer/shared";
 
 import { users } from "./users";
-
-export type ProductMarketplaceType =
-	| "OZON"
-	| "WILDBERRIES"
-	| "AVITO"
-	| "YANDEX_MARKET";
 
 export const products = pgTable("products", {
 	id: serial().primaryKey(),

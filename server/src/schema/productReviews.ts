@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, timestamp, numeric } from "drizzle-orm/pg-core";
 
 import { products } from "./products";
 
@@ -8,6 +8,6 @@ export const productReviews = pgTable("product_reviews", {
 		.references(() => products.id, { onDelete: "cascade" })
 		.notNull(),
 	totalCount: integer("total_count").notNull(),
-	rating: integer("rating").notNull(),
+	rating: numeric("rating", { precision: 2, scale: 1 }),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });

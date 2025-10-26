@@ -6,3 +6,4 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export type UserType = RouterOutputs["getCurrentUser"];
+export type CurrentUserProductsType = RouterOutputs["getCurrentUserProducts"];
