@@ -5,5 +5,9 @@ import type { AppRouter } from "../server/src/utils/trpc/router";
 export type RouterInputs = inferRouterInputs<AppRouter>;
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
+export type ProductReviewType =
+	RouterOutputs["getCurrentUserProductById"]["review"];
 export type UserType = RouterOutputs["getCurrentUser"];
 export type CurrentUserProductsType = RouterOutputs["getCurrentUserProducts"];
+export type TelegramNotificationsDataType =
+	RouterOutputs["getCurrentUserTelegramNotifications"];

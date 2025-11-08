@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import {
 	Bell,
@@ -9,69 +9,132 @@ import {
 	Star,
 	DollarSign,
 	PackageX,
+	Plus,
+	Unlink,
+	MessageCircle,
 } from "lucide-react";
 import Image from "next/image";
 
 import TopPanel from "@/app/components/shared/top-panel";
 import Button from "@/app/components/shared/button";
+import { useUser } from "@/app/store/useUser";
+import { trpc } from "@/app/utils/trpc";
+import Loader from "@/app/components/shared/loader";
+import { TelegramNotificationsDataType } from "@sellyzer/shared";
 
-const TRIGGERS = [
+const TRIGGERS: {
+	key: keyof TelegramNotificationsDataType;
+	name: string;
+	description: string;
+	icon: React.ReactNode;
+}[] = [
 	{
-		id: 1,
+		key: "triggerPositionDown",
 		name: "Падение позиций",
 		description: "Уведомлять, если товар падает в выдаче",
 		icon: <TrendingDown className="w-5 h-5 text-red-500" />,
-		enabled: true,
 	},
 	{
-		id: 2,
+		key: "triggerPositionUp",
 		name: "Рост позиций",
 		description: "Уведомлять, если товар поднимается в выдаче",
 		icon: <TrendingUp className="w-5 h-5 text-green-500" />,
-		enabled: false,
 	},
 	{
-		id: 3,
+		key: "triggerNewReview",
 		name: "Новые отзывы",
 		description: "Уведомлять о новых отзывах пользователей",
-		icon: <Bell className="w-5 h-5 text-amber-500" />,
-		enabled: true,
+		icon: <MessageCircle className="w-5 h-5 text-amber-500" />,
 	},
 	{
-		id: 4,
+		key: "triggerRatingChange",
 		name: "Оценка товара",
-		description: "Уведомлять, если средняя оценка изменилась",
+		description: "Уведомлять, если оценка на сайте изменилась",
 		icon: <Star className="w-5 h-5 text-yellow-500" />,
-		enabled: false,
 	},
 	{
-		id: 5,
+		key: "triggerPriceChange",
 		name: "Изменение цены",
 		description: "Уведомлять при снижении или повышении цены",
 		icon: <DollarSign className="w-5 h-5 text-emerald-500" />,
-		enabled: true,
 	},
 	{
-		id: 6,
+		key: "triggerAvailabilityChange",
 		name: "Доступность товара",
 		description: "Уведомлять, если товар недоступен для покупки",
 		icon: <PackageX className="w-5 h-5 text-slate-500" />,
-		enabled: false,
 	},
 ];
 
 export default function DashboardAlertsPage() {
 	const [triggers, setTriggers] = useState(TRIGGERS);
-	const [connected, setConnected] = useState(false);
 
-	const toggleTrigger = (id: number) => {
+	const toggleTrigger = (
+		key: keyof TelegramNotificationsDataType,
+		newValue: boolean
+	) => {
+		toggleTelegramTrigger.mutate({
+			key,
+			value: newValue,
+		});
+	};
+
+	const { user } = useUser();
+
+	const {
+		data: telegramNotificationsData,
+		isLoading: telegramNotificationsIsLoading,
+		refetch: telegramNotificationsRefetch,
+	} = trpc.getCurrentUserTelegramNotifications.useQuery(undefined, {
+		retry: false,
+		staleTime: 5 * 60 * 1000,
+	});
+
+	const toggleTelegramTrigger =
+		trpc.toggleCurrentUserTelegramTrigger.useMutation({
+			onSuccess: () => telegramNotificationsRefetch(),
+		});
+
+	const disableTelegramNotifications =
+		trpc.disableCurrentUserTelegramNotifications.useMutation({
+			onSuccess: () => {
+				telegramNotificationsRefetch();
+			},
+		});
+
+	const [isPolling, setIsPolling] = useState(false);
+
+	useEffect(() => {
+		if (!isPolling) return;
+
+		const interval = setInterval(async () => {
+			const data = await telegramNotificationsRefetch();
+			if (data.data?.isConnected) {
+				setIsPolling(false);
+			}
+		}, 3000);
+
+		return () => clearInterval(interval);
+	}, [isPolling, telegramNotificationsRefetch]);
+
+	useEffect(() => {
+		if (!telegramNotificationsData) return;
+
 		setTriggers(
-			triggers.map((trigger) =>
-				trigger.id === id
-					? { ...trigger, enabled: !trigger.enabled }
-					: trigger
-			)
+			TRIGGERS.map((t) => ({
+				...t,
+				enabled: telegramNotificationsData[t.key] ?? false,
+			}))
 		);
+	}, [telegramNotificationsData]);
+
+	const getStateOfNotify = (
+		key: keyof TelegramNotificationsDataType
+	): boolean => {
+		return telegramNotificationsData &&
+			typeof telegramNotificationsData[key] === "boolean"
+			? telegramNotificationsData[key]
+			: false;
 	};
 
 	return (
@@ -81,7 +144,12 @@ export default function DashboardAlertsPage() {
 
 			{/* Telegram user block */}
 			<div className="border border-gray-200 dark:border-neutral-700 rounded-lg p-6 bg-gray-50 dark:bg-neutral-800">
-				{connected ? (
+				{!telegramNotificationsData ||
+				telegramNotificationsIsLoading ? (
+					<div className="flex flex-col items-center justify-center gap-3">
+						<Loader className="py-16" />
+					</div>
+				) : telegramNotificationsData.isConnected ? (
 					<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
 						<div className="flex items-center gap-3">
 							<Image
@@ -97,14 +165,17 @@ export default function DashboardAlertsPage() {
 									Подключено к Telegram
 								</p>
 								<p className="text-sm text-gray-500 dark:text-gray-400">
-									@username
+									@{user?.telegramUsername}
 								</p>
 							</div>
 						</div>
 						<Button
 							variant="secondary"
+							icon={<Unlink size={16} />}
 							text="Отключить"
-							onClick={() => setConnected(false)}
+							onClick={() =>
+								disableTelegramNotifications.mutate()
+							}
 						/>
 					</div>
 				) : (
@@ -119,7 +190,15 @@ export default function DashboardAlertsPage() {
 						</p>
 						<Button
 							variant="accent"
-							onClick={() => setConnected(true)}
+							icon={<Plus size={16} />}
+							onClick={() => {
+								window.open(
+									`https://t.me/sellyzer_bot?start=${user?.id}`,
+									"_blank"
+								);
+
+								setIsPolling(true);
+							}}
 							text="Подключить"
 						/>
 					</div>
@@ -127,58 +206,66 @@ export default function DashboardAlertsPage() {
 			</div>
 
 			{/* Cards grid */}
-			{connected && (
-				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					{triggers.map((trigger) => (
-						<div
-							key={trigger.id}
-							className="relative flex flex-col gap-3 p-4 border border-gray-200 rounded-lg dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:border-gray-300 dark:hover:border-neutral-600 transition-base"
-						>
-							<div className="flex items-center justify-between">
-								<div className="flex items-center gap-2">
-									{trigger.icon}
-									<h3 className="text-sm font-medium text-gray-900 dark:text-white">
-										{trigger.name}
-									</h3>
+			{telegramNotificationsData?.isConnected &&
+				!telegramNotificationsIsLoading && (
+					<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						{triggers.map((trigger) => (
+							<div
+								key={trigger.key}
+								className="relative flex flex-col gap-3 p-4 border border-gray-200 rounded-lg dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:border-gray-300 dark:hover:border-neutral-600 transition-base"
+							>
+								<div className="flex items-center justify-between">
+									<div className="flex items-center gap-2">
+										{trigger.icon}
+										<h3 className="text-sm font-medium text-gray-900 dark:text-white">
+											{trigger.name}
+										</h3>
+									</div>
 								</div>
-							</div>
-							<p className="text-xs text-gray-500 dark:text-gray-400">
-								{trigger.description}
-							</p>
-							<div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-100 dark:border-neutral-700">
-								<button
-									onClick={() => toggleTrigger(trigger.id)}
-									className={clsx(
-										"relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-										trigger.enabled
-											? "bg-green-500 focus:ring-green-500"
-											: "bg-gray-200 dark:bg-neutral-600 focus:ring-gray-500"
-									)}
-								>
+								<p className="text-xs text-gray-500 dark:text-gray-400">
+									{trigger.description}
+								</p>
+								<div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-100 dark:border-neutral-700">
+									<button
+										onClick={() =>
+											toggleTrigger(
+												trigger.key,
+												!getStateOfNotify(trigger.key)
+											)
+										}
+										className={clsx(
+											"relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
+											getStateOfNotify(trigger.key)
+												? "bg-green-500 focus:ring-green-500"
+												: "bg-gray-200 dark:bg-neutral-600 focus:ring-gray-500"
+										)}
+									>
+										<span
+											className={clsx(
+												"inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+												getStateOfNotify(trigger.key)
+													? "translate-x-6"
+													: "translate-x-1"
+											)}
+										/>
+									</button>
 									<span
 										className={clsx(
-											"inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
-											trigger.enabled
-												? "translate-x-6"
-												: "translate-x-1"
+											"text-xs font-medium",
+											getStateOfNotify(trigger.key)
+												? "text-green-600 dark:text-green-400"
+												: "text-gray-500 dark:text-gray-400"
 										)}
-									/>
-								</button>
-								<span
-									className={clsx(
-										"text-xs font-medium",
-										trigger.enabled
-											? "text-green-600 dark:text-green-400"
-											: "text-gray-500 dark:text-gray-400"
-									)}
-								>
-									{trigger.enabled ? "Активен" : "Выключен"}
-								</span>
+									>
+										{getStateOfNotify(trigger.key)
+											? "Активен"
+											: "Выключен"}
+									</span>
+								</div>
 							</div>
-						</div>
-					))}
-				</div>
-			)}
+						))}
+					</div>
+				)}
 		</div>
 	);
 }

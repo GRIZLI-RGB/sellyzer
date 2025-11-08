@@ -1,0 +1,21 @@
+{
+	"name": "bot",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"dev": "cross-env MODE=development ts-node-dev --respawn --transpile-only --clear ./index.ts",
+		"prod": "cross-env MODE=production tsc && node dist/index.js"
+	},
+	"license": "ISC",
+	"packageManager": "pnpm@10.14.0",
+	"devDependencies": {
+		"@types/node": "^24.10.0",
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"cross-env": "^7.0.3",
+		"dotenv": "^17.2.1",
+		"grammy": "^1.38.3"
+	}
+}

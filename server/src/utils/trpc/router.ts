@@ -4,10 +4,17 @@ import { and, count, desc, eq, like } from "drizzle-orm";
 import { protectedProcedure, publicProcedure, router } from "./procedures";
 import { products } from "./../../schema/products";
 import { productReviews } from "./../../schema/productReviews";
-import { createProductInput, paginationInput } from "./inputs";
+import {
+	createProductInput,
+	getSingleItemInput,
+	paginationInput,
+	toggleArchiveProductInput,
+	toggleCurrentUserTelegramTriggerInput,
+} from "./inputs";
 import { parseOzonProduct } from "../helpers";
 import { users } from "./../../schema/users";
 import { settings } from "./../../schema/settings";
+import { telegramNotifications } from "./../../schema/telegramNotifications";
 
 export const appRouter = router({
 	getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
@@ -28,6 +35,30 @@ export const appRouter = router({
 
 		return currentUser;
 	}),
+
+	getCurrentUserTelegramNotifications: protectedProcedure.query(
+		async ({ ctx }) => {
+			const userId = ctx.user.id;
+
+			const [record] = await ctx.db
+				.select()
+				.from(telegramNotifications)
+				.where(eq(telegramNotifications.userId, userId));
+
+			if (!record) {
+				const [created] = await ctx.db
+					.insert(telegramNotifications)
+					.values({
+						userId,
+					})
+					.returning();
+
+				return created;
+			}
+
+			return record;
+		}
+	),
 
 	getGlobalSettings: publicProcedure.query(async ({ ctx }) => {
 		const [settingsDb] = await ctx.db.select().from(settings).limit(1);
@@ -94,6 +125,39 @@ export const appRouter = router({
 			};
 		}),
 
+	getCurrentUserProductById: protectedProcedure
+		.input(getSingleItemInput)
+		.query(async ({ ctx, input }) => {
+			const { db, user } = ctx;
+			const { id } = input;
+
+			const [result] = await db
+				.select({
+					product: products,
+					review: productReviews,
+				})
+				.from(products)
+				.leftJoin(
+					productReviews,
+					eq(productReviews.productId, products.id)
+				)
+				.where(and(eq(products.id, id), eq(products.userId, user.id)))
+				.limit(1);
+
+			if (!result?.product) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message:
+						"Продукт не найден или не принадлежит пользователю",
+				});
+			}
+
+			return {
+				...result.product,
+				review: result.review || null,
+			};
+		}),
+
 	createProduct: protectedProcedure
 		.input(createProductInput)
 		.mutation(async ({ ctx, input }) => {
@@ -149,12 +213,11 @@ export const appRouter = router({
 					.returning();
 
 				try {
-					const review = await ctx.db.insert(productReviews).values({
+					await ctx.db.insert(productReviews).values({
 						productId: product.id,
 						totalCount: productData.totalCountReviews,
 						rating: String(productData.rating),
 					});
-					console.log("Inserted review:", review);
 				} catch (e) {
 					console.error("Ошибка при вставке productReviews:", e);
 				}
@@ -167,6 +230,63 @@ export const appRouter = router({
 					message: "Ошибка сохранения товара в базу",
 				});
 			}
+		}),
+
+	toggleArchiveProduct: protectedProcedure
+		.input(toggleArchiveProductInput)
+		.mutation(async ({ ctx, input }) => {
+			const { user, db } = ctx;
+			const { id, archive } = input;
+
+			const [product] = await db
+				.select()
+				.from(products)
+				.where(eq(products.id, id))
+				.limit(1);
+
+			if (!product || product.userId !== user.id) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: "Продукт не найден или доступ запрещен",
+				});
+			}
+
+			const [updatedProduct] = await db
+				.update(products)
+				.set({ isArchived: archive })
+				.where(eq(products.id, id))
+				.returning();
+
+			return updatedProduct;
+		}),
+
+	disableCurrentUserTelegramNotifications: protectedProcedure.mutation(
+		async ({ ctx }) => {
+			const userId = ctx.user.id;
+
+			await ctx.db
+				.update(telegramNotifications)
+				.set({
+					isConnected: false,
+					chatId: null,
+				})
+				.where(eq(telegramNotifications.userId, userId));
+
+			return { success: true };
+		}
+	),
+
+	toggleCurrentUserTelegramTrigger: protectedProcedure
+		.input(toggleCurrentUserTelegramTriggerInput)
+		.mutation(async ({ ctx, input }) => {
+			const userId = ctx.user.id;
+
+			await ctx.db
+				.update(telegramNotifications)
+				.set({ [input.key]: input.value })
+				.where(eq(telegramNotifications.userId, userId));
+
+			return true;
 		}),
 
 	// ! Публичные ендпоинты для тестов !

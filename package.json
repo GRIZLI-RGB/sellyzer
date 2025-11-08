@@ -2,8 +2,8 @@
 	"name": "sellyzer",
 	"private": true,
 	"scripts": {
-		"dev": "concurrently \"pnpm --filter blog dev\" \"pnpm --filter client dev\" \"pnpm --filter server dev\"",
-		"prod": "pnpm install --prod && pnpm --filter client prod && pnpm --filter server prod"
+		"dev": "concurrently \"pnpm --filter bot dev\" \"pnpm --filter blog dev\" \"pnpm --filter client dev\" \"pnpm --filter server dev\"",
+		"prod": "pnpm install --prod && pnpm --filter bot prod && pnpm --filter client prod && pnpm --filter server prod"
 	},
 	"devDependencies": {
 		"@types/node": "^24.2.0",

@@ -5,6 +5,8 @@ import crypto from "crypto";
 
 import { db } from "./plugins/database.plugin";
 import { users } from "./schema/users";
+import { botConnectBody } from "./utils/trpc/inputs";
+import { telegramNotifications } from "./schema/telegramNotifications";
 
 interface TelegramAuthPayload {
 	id: number;
@@ -125,5 +127,31 @@ export default async function (app: FastifyInstance) {
 
 			reply.send({ token });
 		} catch {}
+	});
+	app.post("/bot/connect", async (req, reply) => {
+		const parsed = botConnectBody.safeParse(req.body);
+
+		if (!parsed.success) {
+			return reply.code(400).send({ error: "Invalid request" });
+		}
+
+		const { userId, chatId, username } = parsed.data;
+
+		// 1. Обновляем пользователя
+		await db
+			.update(users)
+			.set({
+				telegramId: chatId,
+				telegramUsername: username ?? null,
+			})
+			.where(eq(users.id, userId));
+
+		// 2. Помечаем уведомления как подключённые
+		await db
+			.update(telegramNotifications)
+			.set({ isConnected: true })
+			.where(eq(telegramNotifications.userId, userId));
+
+		return reply.send({ ok: true });
 	});
 }

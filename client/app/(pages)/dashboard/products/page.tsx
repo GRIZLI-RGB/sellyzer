@@ -15,6 +15,7 @@ import TopPanel from "@/app/components/shared/top-panel";
 import Button from "@/app/components/shared/button";
 import { trpc } from "@/app/utils/trpc";
 import Loader from "@/app/components/shared/loader";
+import { plural, positiveProductReviewPercent } from "@/app/utils/functions";
 
 const isUrl = (s?: string) => {
 	if (!s) return false;
@@ -153,16 +154,26 @@ const ScoreDisplay = ({ score }: { score: string | null }) => {
 const ReviewsDisplay = ({
 	rating,
 	count,
+	positivePercent,
 }: {
 	rating?: string | null;
-	count?: number;
+	count?: number | null;
+	positivePercent?: number | null;
 }) => {
 	if (!rating || !count) {
 		return (
-			<div className="text-xs text-gray-500 dark:text-gray-400">
+			<div className="text-xs text-gray-500 dark:text-gray-400 italic">
 				Нет отзывов
 			</div>
 		);
+	}
+
+	let positiveColor = "text-green-600 dark:text-green-400";
+	if (positivePercent) {
+		if (positivePercent < 50)
+			positiveColor = "text-red-600 dark:text-red-400";
+		else if (positivePercent < 80)
+			positiveColor = "text-yellow-600 dark:text-yellow-400";
 	}
 
 	return (
@@ -174,13 +185,17 @@ const ReviewsDisplay = ({
 					aria-hidden="true"
 				/>
 				<span className="font-semibold text-gray-800 dark:text-gray-200">
-					{+rating}
+					{rating}
 				</span>
 				<span className="text-xs text-gray-500 dark:text-gray-400 ml-0.5 pt-px">
-					({count.toLocaleString("ru-RU")} отзыв
-					{count % 10 === 1 && count % 100 !== 11 ? "" : "ов"})
+					({count} {plural(+count, ["отзыв", "отзыва", "отзывов"])})
 				</span>
 			</div>
+			{positivePercent && (
+				<div className={`text-xs font-medium ${positiveColor}`}>
+					{positivePercent}% положительных
+				</div>
+			)}
 		</div>
 	);
 };
@@ -232,7 +247,7 @@ const PlatformBadge = ({ platform }: { platform: ProductMarketplaceType }) => {
 };
 
 export default function DashboardProductsPage() {
-	const [page, setPage] = useState(1);
+	const [page] = useState(1);
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const debouncedQuery = useDebounce(searchQuery);
@@ -469,6 +484,9 @@ export default function DashboardProductsPage() {
 												count={
 													product.review?.totalCount
 												}
+												positivePercent={positiveProductReviewPercent(
+													product.review
+												)}
 											/>
 										</td>
 										<td className="px-4 py-3">
@@ -531,6 +549,9 @@ export default function DashboardProductsPage() {
 									<ReviewsDisplay
 										rating={product.review?.rating}
 										count={product.review?.totalCount}
+										positivePercent={positiveProductReviewPercent(
+											product.review
+										)}
 									/>
 								</div>
 							</div>

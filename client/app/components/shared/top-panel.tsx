@@ -18,7 +18,7 @@ export default function TopPanel({
 	setSearchQuery?: (newValue: string) => void;
 }) {
 	return (
-		<div className="flex flex-col md:flex-row justify-between gap-2 md:items-center">
+		<div className="flex flex-col md:flex-row justify-between gap-16 md:items-center">
 			<h1 className="text-2xl font-semibold">
 				{title}
 				{numberElements && (

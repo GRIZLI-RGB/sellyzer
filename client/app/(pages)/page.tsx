@@ -158,9 +158,6 @@ export default function LandingPage() {
 							>
 								Попробовать бесплатно
 							</Link>
-							<button className="border border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-semibold hover:border-gray-400 transition-colors w-full sm:w-auto text-center">
-								Смотреть демо
-							</button>
 						</div>
 
 						{/* Platforms */}

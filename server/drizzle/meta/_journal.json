@@ -22,6 +22,62 @@
       "when": 1761447203446,
       "tag": "0002_thin_scarlet_witch",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1761596669195,
+      "tag": "0003_sleepy_captain_universe",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1761599918987,
+      "tag": "0004_nice_proemial_gods",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1761599935893,
+      "tag": "0005_deep_roughhouse",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1761601748881,
+      "tag": "0006_dazzling_scourge",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1761606066464,
+      "tag": "0007_cooing_moondragon",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1761614351418,
+      "tag": "0008_last_madelyne_pryor",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1761623874105,
+      "tag": "0009_flimsy_silver_centurion",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1761624537296,
+      "tag": "0010_salty_eddie_brock",
+      "breakpoints": true
     }
   ]
 }

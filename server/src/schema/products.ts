@@ -1,4 +1,5 @@
 import {
+	boolean,
 	integer,
 	numeric,
 	pgTable,
@@ -25,7 +26,13 @@ export const products = pgTable("products", {
 		.notNull()
 		.default(sql`ARRAY[]::text[]`),
 	rating: numeric("rating", { precision: 2, scale: 1 }),
-	createdAt: timestamp().defaultNow().notNull(),
+	isArchived: boolean("is_archived").default(false),
+	createdAt: timestamp("created_at", { withTimezone: true })
+		.defaultNow()
+		.notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true })
+		.defaultNow()
+		.notNull(),
 	userId: integer("user_id")
 		.references(() => users.id)
 		.notNull(),

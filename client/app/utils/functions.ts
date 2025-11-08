@@ -1,3 +1,5 @@
+import { ProductReviewType } from "@sellyzer/shared";
+
 /**
  * Склоняет слово по количеству (русский язык)
  * @param count — число
@@ -14,4 +16,35 @@ export function plural(count: number, forms: [string, string, string]): string {
 		return forms[1];
 
 	return forms[2];
+}
+
+/**
+ * Рассчитывает процент положительных отзывов (4 и 5 звезд)
+ * @param review — объект с количеством отзывов по звездам
+ * @returns процент положительных отзывов (0–100), округлённый до целого
+ */
+export function positiveProductReviewPercent(
+	review: ProductReviewType
+): number {
+	if (!review) return 0;
+
+	const { countStars4, countStars5, totalCount } = review;
+
+	if (totalCount === 0) return 0;
+
+	const positive = countStars4 + countStars5;
+
+	return Math.round((positive / totalCount) * 100);
+}
+
+/**
+ * Обрезает строку до заданной длины и добавляет "..." если нужно
+ * @param str — исходная строка
+ * @param maxLength — максимальное количество символов
+ * @returns обрезанная строка
+ */
+export function truncateString(str: string, maxLength: number): string {
+	if (str.length <= maxLength) return str;
+	
+	return str.slice(0, maxLength - 3) + "...";
 }

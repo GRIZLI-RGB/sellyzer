@@ -3,9 +3,20 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HeroUIProvider } from "@heroui/react";
 import { httpBatchLink } from "@trpc/react-query";
+import { ThemeProvider } from "next-themes";
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+import relativeTime from "dayjs/plugin/relativeTime";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import "dayjs/locale/ru";
 
 import { trpc } from "./../../utils/trpc";
-import { ThemeProvider } from "next-themes";
+
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale("ru");
 
 export default function Providers({ children }: { children: React.ReactNode }) {
 	const queryClient = new QueryClient();

@@ -14,6 +14,9 @@ export const users = pgTable("users", {
 		.notNull(),
 	email: varchar("email", { length: 64 }).unique(),
 	telegramId: varchar("telegram_id", { length: 64 }).unique(),
+	telegramUsername: varchar("telegram_username", { length: 64 }).unique(),
 	balance: integer("balance").default(0).notNull(),
-	createdAt: timestamp("created_at").defaultNow().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true })
+		.defaultNow()
+		.notNull(),
 });
