@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "ir-8.ozone.ru",
+				hostname: "ir-*.ozone.ru",
 				pathname: "/**",
 			},
 		],

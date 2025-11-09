@@ -1,5 +1,23 @@
-import puppeteer, { Browser } from "puppeteer";
+import puppeteer, { Browser, Page } from "puppeteer";
 import { TRPCError } from "@trpc/server";
+
+async function autoScroll(page: Page) {
+	await page.evaluate(async () => {
+		await new Promise<void>((resolve) => {
+			let totalHeight = 0;
+			const distance = 100;
+			const timer = setInterval(() => {
+				const scrollHeight = document.body.scrollHeight;
+				window.scrollBy(0, distance);
+				totalHeight += distance;
+				if (totalHeight >= scrollHeight - window.innerHeight) {
+					clearInterval(timer);
+					resolve();
+				}
+			}, 100);
+		});
+	});
+}
 
 /* 
 	Парсит товар с Озон по артикулу или ссылке
@@ -21,17 +39,7 @@ export async function parseOzonProduct(article?: string, url?: string) {
 
 		const page = await browser.newPage();
 
-		// === Блокировка лишних ресурсов ===
-		await page.setRequestInterception(true);
-		page.on("request", (req) => {
-			const resourceType = req.resourceType();
-			const blockedResources = ["stylesheet", "font"];
-			if (blockedResources.includes(resourceType)) {
-				req.abort();
-			} else {
-				req.continue();
-			}
-		});
+		await autoScroll(page); // функция скролла вниз страницы
 
 		// === UserAgent и anti-detect ===
 		await page.setUserAgent(
@@ -104,6 +112,51 @@ export async function parseOzonProduct(article?: string, url?: string) {
 				);
 			}
 		}
+
+		// === Распределение по звёздам ===
+		const starsCount: Record<string, number> = {
+			countStars1: 0,
+			countStars2: 0,
+			countStars3: 0,
+			countStars4: 0,
+			countStars5: 0,
+		};
+
+		const reviewTabsExist = await page.$('[data-widget="webReviewTabs"]');
+
+		if (reviewTabsExist) {
+			const rows = await page.$$eval(
+				'[data-widget="webReviewTabs"] [data-widget="row"]',
+				(rowEls) => {
+					const results: { star: number; count: number }[] = [];
+
+					rowEls.forEach((rowEl) => {
+						const starsDivs = Array.from(
+							rowEl.querySelectorAll("div")
+						);
+						starsDivs.forEach((div) => {
+							const text = div.textContent?.trim() || "";
+							const starMatch = text.match(/^([1-5])\s*зв/);
+							const countMatch = text.match(/(\d+)$/); // число в конце
+							if (starMatch && countMatch) {
+								results.push({
+									star: parseInt(starMatch[1], 10),
+									count: parseInt(countMatch[1], 10),
+								});
+							}
+						});
+					});
+
+					return results;
+				}
+			);
+
+			rows.forEach((row) => {
+				starsCount[`countStars${row.star}`] = row.count;
+			});
+		}
+
+		console.log(starsCount);
 
 		// === Артикул ===
 		let parsedArticle: string | null = null;
@@ -180,6 +233,7 @@ export async function parseOzonProduct(article?: string, url?: string) {
 			totalCountReviews,
 			article: parsedArticle || "unknown",
 			images,
+			starsCount,
 		};
 	} finally {
 		if (browser) await browser.close();

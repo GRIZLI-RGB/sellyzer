@@ -36,3 +36,7 @@ export const botConnectBody = z.object({
 	chatId: z.string(),
 	username: z.string().nullable(),
 });
+
+export const createPaymentInput = z.object({
+	amount: z.number().positive(),
+});

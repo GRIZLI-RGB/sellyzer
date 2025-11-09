@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
@@ -7,6 +7,7 @@ import { db } from "./plugins/database.plugin";
 import { users } from "./schema/users";
 import { botConnectBody } from "./utils/trpc/inputs";
 import { telegramNotifications } from "./schema/telegramNotifications";
+import { payments } from "./schema/payments";
 
 interface TelegramAuthPayload {
 	id: number;
@@ -153,5 +154,51 @@ export default async function (app: FastifyInstance) {
 			.where(eq(telegramNotifications.userId, userId));
 
 		return reply.send({ ok: true });
+	});
+	app.post("/yookassa", async (req, reply) => {
+		try {
+			const body: any = req.body;
+
+			if (!body || !body.event || !body.object) {
+				return reply.status(400).send({ error: "Invalid payload" });
+			}
+
+			const { object } = body;
+			const { id: yookassaPaymentId, status: newStatus } = object;
+
+			const [payment] = await db
+				.select()
+				.from(payments)
+				.where(eq(payments.yookassaPaymentId, yookassaPaymentId))
+				.limit(1);
+
+			if (!payment) {
+				reply.code(404);
+				return { error: "Payment not found" };
+			}
+
+			await db
+				.update(payments)
+				.set({
+					status: newStatus,
+					updatedAt: new Date(),
+				})
+				.where(eq(payments.id, payment.id))
+				.returning();
+
+			if (newStatus === "succeeded") {
+				await db
+					.update(users)
+					.set({
+						balance: sql`${users.balance} + ${payment.amount}`,
+					})
+					.where(eq(users.id, payment.userId));
+			}
+
+			return { ok: true };
+		} catch (err) {
+			console.error("Yookassa webhook error:", err);
+			return reply.code(500).send({ error: "Internal error" });
+		}
 	});
 }

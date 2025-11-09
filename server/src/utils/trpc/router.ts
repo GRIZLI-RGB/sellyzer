@@ -5,6 +5,7 @@ import { protectedProcedure, publicProcedure, router } from "./procedures";
 import { products } from "./../../schema/products";
 import { productReviews } from "./../../schema/productReviews";
 import {
+	createPaymentInput,
 	createProductInput,
 	getSingleItemInput,
 	paginationInput,
@@ -14,6 +15,7 @@ import {
 import { parseOzonProduct } from "../helpers";
 import { users } from "./../../schema/users";
 import { settings } from "./../../schema/settings";
+import { payments } from "./../../schema/payments";
 import { telegramNotifications } from "./../../schema/telegramNotifications";
 
 export const appRouter = router({
@@ -171,6 +173,7 @@ export const appRouter = router({
 				totalCountReviews: number;
 				article: string;
 				images: string[];
+				starsCount: { [key: string]: number };
 			} = {
 				title: "",
 				price: 0,
@@ -179,6 +182,13 @@ export const appRouter = router({
 				totalCountReviews: 0,
 				article: "",
 				images: [],
+				starsCount: {
+					countStars1: 0,
+					countStars2: 0,
+					countStars3: 0,
+					countStars4: 0,
+					countStars5: 0,
+				},
 			};
 
 			try {
@@ -217,6 +227,11 @@ export const appRouter = router({
 						productId: product.id,
 						totalCount: productData.totalCountReviews,
 						rating: String(productData.rating),
+						countStars1: productData.starsCount[`countStars1`],
+						countStars2: productData.starsCount[`countStars2`],
+						countStars3: productData.starsCount[`countStars3`],
+						countStars4: productData.starsCount[`countStars4`],
+						countStars5: productData.starsCount[`countStars5`],
 					});
 				} catch (e) {
 					console.error("Ошибка при вставке productReviews:", e);
@@ -287,6 +302,114 @@ export const appRouter = router({
 				.where(eq(telegramNotifications.userId, userId));
 
 			return true;
+		}),
+
+	createPayment: protectedProcedure
+		.input(createPaymentInput)
+		.mutation(async ({ ctx, input }) => {
+			const { amount } = input;
+			const { db, user } = ctx;
+
+			const apiUrl = process.env.YOOKASSA_API_URL;
+			const shopId = process.env.YOOKASSA_SHOP_ID;
+			const apiKey = process.env.YOOKASSA_API_KEY;
+
+			if (!apiUrl || !shopId || !apiKey) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "YooKassa env variables missing",
+				});
+			}
+
+			const [payment] = await db
+				.insert(payments)
+				.values({
+					userId: user.id,
+					amount: amount,
+					status: "created",
+				})
+				.returning();
+
+			const authHeader =
+				"Basic " +
+				Buffer.from(`${shopId}:${apiKey}`).toString("base64");
+
+			const payload = {
+				amount: {
+					value: amount.toFixed(2),
+					currency: "RUB",
+				},
+				capture: true,
+				description: `Пополнение баланса. Платёжный документ №${payment.id}.`,
+				confirmation: {
+					type: "redirect",
+					return_url: `https://sellyzer.ru/dashboard/billing?payment_id=${payment.id}`,
+				},
+				metadata: {
+					userId: user.id,
+					localPaymentId: payment.id,
+				},
+			};
+
+			const res = await fetch(`${apiUrl}/payments`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Idempotence-Key": crypto.randomUUID(),
+					Authorization: authHeader,
+				},
+				body: JSON.stringify(payload),
+			});
+
+			const json = await res.json();
+
+			if (!res.ok) {
+				await db
+					.update(payments)
+					.set({ status: "canceled" })
+					.where(eq(payments.id, payment.id));
+
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `YooKassa error: ${JSON.stringify(json)}`,
+				});
+			}
+
+			await db
+				.update(payments)
+				.set({
+					yookassaPaymentId: json.id,
+					status: json.status,
+					updatedAt: new Date(),
+				})
+				.where(eq(payments.id, payment.id));
+
+			return {
+				yookassaPaymentId: json.id,
+				status: json.status,
+				confirmationUrl: json.confirmation?.confirmation_url ?? null,
+			};
+		}),
+
+	getPaymentById: protectedProcedure
+		.input(getSingleItemInput)
+		.query(async ({ ctx, input }) => {
+			const { id } = input;
+			const { db, user } = ctx;
+
+			const [payment] = await db
+				.select()
+				.from(payments)
+				.where(eq(payments.id, id));
+
+			if (!payment || payment.userId !== user.id) {
+				throw new TRPCError({
+					code: "NOT_FOUND",
+					message: "Платеж не найден или доступ запрещен",
+				});
+			}
+
+			return payment;
 		}),
 
 	// ! Публичные ендпоинты для тестов !

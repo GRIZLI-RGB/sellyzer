@@ -95,7 +95,7 @@ const platforms: {
 		id: "WILDBERRIES",
 		name: "Wildberries",
 		img: "/images/platforms/wildberries.png",
-		available: true,
+		available: false,
 		color: "purple",
 	},
 	{
@@ -191,7 +191,7 @@ const ReviewsDisplay = ({
 					({count} {plural(+count, ["отзыв", "отзыва", "отзывов"])})
 				</span>
 			</div>
-			{positivePercent && (
+			{!!positivePercent && (
 				<div className={`text-xs font-medium ${positiveColor}`}>
 					{positivePercent}% положительных
 				</div>
